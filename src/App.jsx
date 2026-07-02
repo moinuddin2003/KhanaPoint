@@ -1,14 +1,7 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router";
-import Home from "./Pages/Home";
+import AppRoutes from "./routes/AppRoutes";
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <AppRoutes />;
 }
 
 export default App;

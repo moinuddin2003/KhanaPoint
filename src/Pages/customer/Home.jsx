@@ -1,13 +1,14 @@
 import React from "react";
-import HeroBanner from "../Components/Home/HeroBanner";
-import PartnerRideSection from "../components/Home/PartnerRideSection";
+import DownloadBanner from "../../Components/Home/DownloadBanner";
+import GetStarted from "../../Components/Home/GetStarted";
 
 // Replace these with the actual image paths/imports you're providing.
-import chef from "../assets/chef.png";
-import logo from "../assets/logo-1.png";
-import couple from "../assets/couple.png";
-import badges from "../assets/store-badges.png";
-import rider from "../assets/rider.png";
+// import chef from "../assets/chef.png";
+import chef from "../../assets/chef.png";
+import logo from "../../assets/logo-1.png";
+import couple from "../../assets/couple.png";
+import badges from "../../assets/store-badges.png";
+import rider from "../../assets/rider.png";
 
 export default function Home() {
   const handlePartnerClick = () => {
@@ -22,9 +23,13 @@ export default function Home() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-6">
-      <HeroBanner imageLogo={logo} imageSrc={couple} appBadgesSrc={badges} />
+      <DownloadBanner
+        imageLogo={logo}
+        imageSrc={couple}
+        appBadgesSrc={badges}
+      />
 
-      <PartnerRideSection
+      <GetStarted
         partnerImage={chef}
         riderImage={rider}
         onPartnerClick={handlePartnerClick}

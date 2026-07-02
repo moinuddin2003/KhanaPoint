@@ -5,7 +5,7 @@ import Button from "../common/Button";
  * PromoCard
  * A single background-image card with a top-left pill badge,
  * an eyebrow, a heading, and a CTA button. Local to this file
- * since it's only ever used inside PartnerRideSection.
+ * since it's only ever used inside GetStarted.
  */
 function PromoCard({
   bgImage,
@@ -41,14 +41,14 @@ function PromoCard({
 }
 
 /**
- * PartnerRideSection
+ * GetStarted
  *
  * Props:
  *  - partnerImage (string, required): background image for the "Partner with us" card.
  *  - riderImage (string, required): background image for the "Ride with us" card.
  *  - onPartnerClick, onRiderClick (optional callbacks for the two CTA buttons)
  */
-export default function PartnerRideSection({
+export default function GetStarted({
   partnerImage,
   riderImage,
   onPartnerClick,
