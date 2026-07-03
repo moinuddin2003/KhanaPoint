@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Card from "../../Components/RestaurantDetail/Card";
 import { Images } from "../../assets";
 import { data } from "../../utils/dummyData";
+import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
 
 export default function RestaurantDetail() {
   const [userCart, setUserCart] = useState([]);
@@ -25,6 +26,9 @@ export default function RestaurantDetail() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-2 p-6">
+      <div className="space-y-14">
+        <DiscountCards />
+      </div>
       {/* Restaurant Categories With Items */}
       <div className="space-y-14">
         {data.map((category) => (
