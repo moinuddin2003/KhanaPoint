@@ -1,25 +1,41 @@
 import React from "react";
 import { Images } from "../../assets";
-const DiscountCards = () => {
+
+const DiscountCard = ({ data, onBtnClick }) => {
   return (
-    <div className="overflow-hidden relative rounded-4xl p-5 s bg-white">
-      <div className="img h-80 w-80 ">
-        <img src={Images.IceCream} />
+    <div className="relative h-56 w-full overflow-hidden rounded-2xl">
+      {/* Background Image */}
+      <img
+        src={data.image}
+        alt={data.title}
+        className="h-auto w-full object-cover"
+      />
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+      {/* Discount Badge */}
+      <div className="absolute right-4 top-0 rounded-b-xl bg-[#03081F] px-5 py-3">
+        <span className="text-sm font-semibold text-white">{data.badge}</span>
       </div>
-      <div className="absolute bottom-36 pl-5">
-        <p className="text-[#FC8A06]">McDonald’s East London</p>
-        <h1 className="text-white">First Order Discount</h1>
+
+      {/* Text */}
+      <div className="absolute bottom-5 left-5">
+        <p className="mb-1 text-sm font-medium text-[#FC8A06]">{data.brand}</p>
+
+        <h2 className="text-[32px] font-bold leading-none text-white">
+          {data.title}
+        </h2>
       </div>
-      <div className="absolute bottom-32 left-71 rounded-tl-4xl opacity-90 rounded-br-lg bg-white/80 px-3  pt-5 backdrop-blur-sm">
-        <button onClick={() => console.log(first)}>
-          <img src={Images.ICN_Plus} alt="" className="h-8 w-8 " />
+
+      {/* Add Button */}
+      <div className="absolute bottom-0 right-0 rounded-tl-[45px] bg-white/80 px-5 pb-2 pt-5 backdrop-blur-sm">
+        <button onClick={onBtnClick}>
+          <img src={Images.ICN_Plus} alt="Add" className="h-10 w-10" />
         </button>
-      </div>
-      <div className="absolute bottom-0 left-0 rounded-tl-4xl opacity-90 rounded-br-lg bg-black/80 px-3  pt-5 backdrop-blur-sm">
-        -20%
       </div>
     </div>
   );
 };
 
-export default DiscountCards;
+export default DiscountCard;

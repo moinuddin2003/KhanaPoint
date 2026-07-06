@@ -11,7 +11,8 @@ export const data = [
         title: "Royal Cheese Burger with extra Fries",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 2 medium sized French Fries",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "b2",
@@ -19,7 +20,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "b3",
@@ -27,7 +29,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "b4",
@@ -35,7 +38,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "b5",
@@ -43,7 +47,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "b6",
@@ -51,7 +56,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
     ],
   },
@@ -65,7 +71,8 @@ export const data = [
         title: "Royal Cheese Burger with extra Fries",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 2 medium sized French Fries",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "f2",
@@ -73,7 +80,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "f3",
@@ -81,7 +89,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "f4",
@@ -89,7 +98,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "f5",
@@ -97,7 +107,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "f6",
@@ -105,7 +116,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
     ],
   },
@@ -119,7 +131,8 @@ export const data = [
         title: "Royal Cheese Burger with extra Fries",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 2 medium sized French Fries",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "d2",
@@ -127,7 +140,9 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
+
       },
       {
         id: "d3",
@@ -135,7 +150,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "d4",
@@ -143,7 +159,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "d5",
@@ -151,7 +168,8 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
       {
         id: "d6",
@@ -159,8 +177,33 @@ export const data = [
         title: "The classics for 3",
         description:
           "1 McChicken™, 1 Big Mac™, 1 Royal Cheeseburger, 3 medium sized French Fries, 3 cold drinks",
-        price: "GBP 23.10",
+        price: 23.4,
+        quantity: 1,
       },
     ],
+  },
+];
+
+export const promos = [
+  {
+    id: 1,
+    image: Images.IceCream,
+    badge: "-20%",
+    brand: "McDonald's East London",
+    title: "First Order Discount",
+  },
+  {
+    id: 2,
+    image: Images.IceCream,
+    badge: "-20%",
+    brand: "McDonald's East London",
+    title: "Vegan Discount",
+  },
+  {
+    id: 3,
+    image: Images.IceCream,
+    badge: "-100%",
+    brand: "McDonald's East London",
+    title: "Free Ice Cream Offer",
   },
 ];
