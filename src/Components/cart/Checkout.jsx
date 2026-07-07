@@ -7,6 +7,16 @@ export default function Checkout({
   onDecrease,
 }) {
   console.log("Checkout:", cartItems);
+
+  // total is considered is accumulator
+  // item is considered as currentITem
+  const subTotal = cartItems.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+
+  const deliveryFee = 2;
+  const discount = subTotal > 50 ? 10 : 0;
+  const total = subTotal + deliveryFee - discount;
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       {/* Back */}
@@ -30,7 +40,7 @@ export default function Checkout({
 
             <Button onClick={confirm}>Confirm</Button>
           </div>
-          {/* Product 1 */}
+          {/* Product */}
           {cartItems.map((item) => {
             console.log(item);
 
@@ -72,7 +82,7 @@ export default function Checkout({
                     </button>
 
                     <span className="font-semibold">{item.quantity}</span>
-                    
+
                     <button
                       onClick={() => onIncrease(item.id)}
                       className="text-xl font-bold"
@@ -92,24 +102,23 @@ export default function Checkout({
             <button className="rounded-lg border border-yellow-400 px-6 py-3 font-semibold text-yellow-500">
               + Add Discount
             </button>
-
             <div className="w-72 space-y-3">
               <div className="flex justify-between">
                 <span>Subtotal</span>
 
-                <span>£43.00</span>
+                <span>{subTotal.toFixed(2)}</span>
               </div>
 
               <div className="flex justify-between">
                 <span>Delivery Fee</span>
 
-                <span>£2.00</span>
+                <span>{deliveryFee.toFixed(2)}</span>
               </div>
 
               <div className="flex justify-between">
                 <span>Discount</span>
 
-                <span>-£10.00</span>
+                <span>-£{discount.toFixed(2)}</span>
               </div>
 
               <hr />
@@ -117,7 +126,7 @@ export default function Checkout({
               <div className="flex justify-between text-xl font-bold">
                 <span>Total</span>
 
-                <span>£35.00</span>
+                <span>£{total.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -131,19 +140,19 @@ export default function Checkout({
             <div className="flex justify-between">
               <span>Subtotal</span>
 
-              <span>£144.00</span>
+              <span>{subTotal.toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between">
               <span>Delivery Fee</span>
 
-              <span>£0.00</span>
+              <span>{deliveryFee.toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between">
               <span>Discount</span>
 
-              <span>-£25.00</span>
+              <span>-£{discount.toFixed(2)}</span>
             </div>
 
             <hr />
@@ -151,7 +160,7 @@ export default function Checkout({
             <div className="flex justify-between text-xl font-bold">
               <span>Total</span>
 
-              <span>£119.00</span>
+              <span>£{total.toFixed(2)}</span>
             </div>
 
             <button className="mt-6 w-full rounded-lg bg-gray-300 py-3 font-semibold">

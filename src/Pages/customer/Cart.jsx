@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Checkout from "../../components/cart/Checkout";
+import Checkout from "../../Components/cart/Checkout";
 import { useEffect } from "react";
 
 export default function Cart() {
@@ -21,16 +21,29 @@ export default function Cart() {
   };
 
   const handleDecrease = (id) => {
-    // if (count > 0) {
-    const updatedCart = cartItems.map((cart) => {
-      if (cart.id === id) {
-        return {
-          ...cart,
-          quantity: cart.quantity - 1,
-        };
+    let updatedCart;
+    const findCartItems = cartItems.find((item) => item.id === id);
+    if (findCartItems.quantity > 1) {
+      updatedCart = cartItems.map((cart) => {
+        if (cart.id === id) {
+          return {
+            ...cart,
+            quantity: cart.quantity - 1,
+          };
+        }
+        return cart;
+      });
+    } else {
+      const isConfirmed = window.confirm(
+        "Are you sure you want to remove this item?",
+      );
+
+      if (!isConfirmed) {
+        return;
+      } else {
+        updatedCart = cartItems.filter((item) => item.id !== id);
       }
-      return cart;
-    });
+    }
 
     setCartItems(updatedCart);
     localStorage.setItem("UserCart", JSON.stringify(updatedCart));
