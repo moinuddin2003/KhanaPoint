@@ -4,42 +4,44 @@ import Card from "../../Components/RestaurantDetail/Card";
 import { Images } from "../../assets";
 import { data, promos } from "../../utils/dummyData";
 import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
-import Checkout from "../../Components/cart/Checkout";
 
 export default function RestaurantDetail() {
   const [userCart, setUserCart] = useState([]);
-  const [quantity, setQuantity] = useState(1);
-
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("UserCart")) || [];
     setUserCart(storedCart);
   }, []);
 
   const handleAddToCard = (item) => {
-    // const updatedCart = [...userCart, item];
-    // setUserCart(updatedCart);
-
+    console.log(item);
     const existingItem = userCart.find((cartItem) => cartItem.id === item.id);
 
+    let updatedCart;
+
     if (existingItem) {
-      userCart.map((cartItem) => {
-        if(cartItem.id === item.id){
+      updatedCart = userCart.map((cartItem) => {
+        if (cartItem.id === item.id) {
           return {
             ...cartItem,
-            quantity: cartItem
-          }
+            quantity: cartItem.quantity + 1,
+          };
         }
-        return cartItem
-      })
+        console.log("This is cart item", cartItem);
+        console.log(
+          "If Updated Cart When quantity is more than 1",
+          updatedCart,
+        );
+        return cartItem;
+      });
     } else {
-      const updatedCart = [...userCart, item];
-      setUserCart(updatedCart);
+      updatedCart = [...userCart, { ...item }];
+      console.log("else Updated Cart When the item is new", updatedCart);
     }
 
-    setTimeout(() => {
-      localStorage.setItem("UserCart", JSON.stringify(updatedCart));
-      window.alert("Cart Updated");
-    }, 1000);
+    localStorage.setItem("UserCart", JSON.stringify(updatedCart));
+    setUserCart(updatedCart);
+
+    window.alert("Cart Updated");
   };
 
   return (
@@ -75,8 +77,6 @@ export default function RestaurantDetail() {
           </section>
         ))}
       </div>
-
-      <Checkout />
     </div>
   );
 }
