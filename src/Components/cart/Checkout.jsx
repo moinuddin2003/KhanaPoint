@@ -17,6 +17,20 @@ export default function Checkout({
   const deliveryFee = 2;
   const discount = subTotal > 50 ? 10 : 0;
   const total = subTotal + deliveryFee - discount;
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold">Your Cart is Empty 🛒</h1>
+
+        <p className="mt-3 text-gray-500">
+          Add some delicious food to your cart.
+        </p>
+
+        <button>Button Nhi arha</button>
+      </div>
+    );
+  }
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       {/* Back */}
@@ -38,7 +52,7 @@ export default function Checkout({
               My Cart
             </div>
 
-            <Button onClick={confirm}>Confirm</Button>
+            {/* <Button onClick={confirm}>Confirm</Button> */}
           </div>
           {/* Product */}
           {cartItems.map((item) => {
@@ -98,7 +112,7 @@ export default function Checkout({
             );
           })}
           {/* Bottom */}
-          <div className="flex items-end justify-between p-6">
+          {/* <div className="flex items-end justify-between p-6">
             <button className="rounded-lg border border-yellow-400 px-6 py-3 font-semibold text-yellow-500">
               + Add Discount
             </button>
@@ -129,51 +143,56 @@ export default function Checkout({
                 <span>£{total.toFixed(2)}</span>
               </div>
             </div>
-          </div>
+          </div>  */}
         </div>
 
         {/* Right Section */}
-        <div className="h-fit rounded-2xl bg-white p-6 shadow-lg">
-          <h2 className="mb-6 text-3xl font-bold">Total Payment</h2>
+        {cartItems.length > 0 && (
+          <div className="h-fit rounded-2xl bg-white p-6 shadow-lg">
+            <h2 className="mb-6 text-3xl font-bold">Total Payment</h2>
 
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
 
-              <span>{subTotal.toFixed(2)}</span>
-            </div>
+                <span>{subTotal.toFixed(2)}</span>
+              </div>
 
-            <div className="flex justify-between">
-              <span>Delivery Fee</span>
+              <div className="flex justify-between">
+                <span>Delivery Fee</span>
 
-              <span>{deliveryFee.toFixed(2)}</span>
-            </div>
+                <span>{deliveryFee.toFixed(2)}</span>
+              </div>
 
-            <div className="flex justify-between">
-              <span>Discount</span>
+              <div className="flex justify-between">
+                <span>Discount</span>
 
-              <span>-£{discount.toFixed(2)}</span>
-            </div>
+                <span>-£{discount.toFixed(2)}</span>
+              </div>
 
-            <hr />
+              <hr />
 
-            <div className="flex justify-between text-xl font-bold">
-              <span>Total</span>
+              <div className="flex justify-between text-xl font-bold">
+                <span>Total</span>
 
-              <span>£{total.toFixed(2)}</span>
-            </div>
+                <span>£{total.toFixed(2)}</span>
+              </div>
 
-            <button className="mt-6 w-full rounded-lg bg-gray-300 py-3 font-semibold">
-              Send Order
-            </button>
+              <Button
+                onClick={confirm}
+                className="mt-6 w-full rounded-lg  py-3 font-semibold"
+              >
+                Place Order
+              </Button>
 
-            <p className="pt-5 text-sm text-gray-500">
+              {/* <p className="pt-5 text-sm text-gray-500">
               In the case of a group order, the delivery cost is paid
               individually and the balance is refunded based on the total
               amount.
-            </p>
+            </p> */}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
