@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
+import { loginUser } from "../../services/authApi";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,12 +21,37 @@ const LoginForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email || !formData.password) {
+      alert("Fill All Fields");
+      return;
+    }
+    try {
+      setLoading(true);
+      const data = await loginUser(formData);
+      console.log(data);
+      console.log(formData);
 
-    console.log(formData);
+      // Local Storage wOrk
+      // const savedUser = JSON.parse(localStorage.getItem("user"));
+      // console.log(savedUser);
 
-    // Login Logic Here
+      if (data?.message) {
+        const storage = formData.remember ? localStorage : sessionStorage;
+        storage.setItem("user", JSON.stringify(data.data));
+        storage.setItem("accessToken", data.token.access);
+        storage.setItem("refreshToken", data.token.refresh);
+        alert(data.message);
+      } else {
+        alert("Invalid Credentials");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something Went Wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -112,10 +138,11 @@ const LoginForm = () => {
         {/* Button */}
 
         <button
+          disabled={loading}
           type="submit"
           className="h-14 w-full rounded-full bg-[#FC8A06] font-semibold text-white transition hover:bg-[#E97B05]"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Signup */}
