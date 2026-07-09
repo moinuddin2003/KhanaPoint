@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, replace, useNavigate } from "react-router";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { registerUser } from "../../services/authApi";
 const SignupForm = () => {
-
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const SignupForm = () => {
     city: "",
     country: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -29,13 +29,51 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = await registerUser(formData);
+    if (
+      !formData.email ||
+      !formData.password ||
+      !formData.confirm_password ||
+      !formData.city ||
+      !formData.username
+    ) {
+      alert("Required Fields Must be Filled");
+    }
 
-    console.log(data);
+    if (formData.password !== formData.confirm_password) {
+      alert("Password and confirm password do not match");
+      return;
+    }
 
-    // localStorage.setItem("user", JSON.stringify(formData));
+    try {
+      setLoading(true);
+      const data = await registerUser(formData);
+      console.log(data);
 
-    console.log(formData);
+      if (data.error) {
+        alert("User with this email already exists");
+        return;
+      }
+
+      if (data?.message) {
+        alert(data.message);
+
+        localStorage.setItem("user", JSON.stringify(data.data));
+        localStorage.setItem("accessToken", data.token.access);
+        localStorage.setItem("refreshToken", data.token.refresh);
+        navigate("/");
+      }
+
+      // localStorage.setItem("user", JSON.stringify(formData));
+
+      console.log(formData);
+
+      // setLoading(false);
+    } catch (error) {
+      console.error(error);
+      alert("Something Went Wrong");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <form
@@ -176,10 +214,11 @@ const SignupForm = () => {
 
       {/* Button */}
       <button
+        disabled={loading}
         type="submit"
         className="h-14 w-full rounded-xl bg-[#FC8A06] font-semibold text-white transition hover:bg-[#e97d00]"
       >
-        Create Account
+        {loading ? "Creating... " : "Create Account"}
       </button>
 
       {/* Footer */}
@@ -189,7 +228,7 @@ const SignupForm = () => {
           Sign In
         </span> */}
         <Link
-          to="/login"
+          to="/"
           className="font-semibold text-[#FC8A06] hover:underline"
         >
           Login

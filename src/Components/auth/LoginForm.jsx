@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { loginUser } from "../../services/authApi";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,6 +44,7 @@ const LoginForm = () => {
         storage.setItem("accessToken", data.token.access);
         storage.setItem("refreshToken", data.token.refresh);
         alert(data.message);
+        navigate("/home");
       } else {
         alert("Invalid Credentials");
       }
