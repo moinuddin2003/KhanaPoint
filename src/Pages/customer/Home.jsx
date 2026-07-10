@@ -4,6 +4,8 @@ import GetStarted from "../../Components/Home/GetStarted";
 import { Images } from "../../assets";
 import Navbar from "../../Components/common/Navbar";
 import Footer from "../../Components/common/Footer";
+import HeroBanner from "../../Components/Home/HeroBanner";
+import AboutUs from "../../Components/Home/AboutUs";
 
 export default function Home() {
   const handlePartnerClick = () => {
@@ -17,9 +19,12 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
+    <div className="">
+      {/* // mx-auto max-w-7xl space-y-6 p-6 */}
+
       <Navbar />
 
+      <HeroBanner />
       <DownloadBanner />
 
       <GetStarted
@@ -28,7 +33,7 @@ export default function Home() {
         onPartnerClick={handlePartnerClick}
         onRiderClick={handleRiderClick}
       />
-
+      <AboutUs />
       <Footer />
     </div>
   );

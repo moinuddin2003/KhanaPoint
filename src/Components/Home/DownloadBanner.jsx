@@ -62,7 +62,7 @@ export default function DownloadBanner({
 
           <a href={storeHref} className="mt-1 inline-block w-fit">
             <img
-              src={Images.Badges}
+              src={Images.PlayStoreBadge}
               alt={appBadgesAlt}
               className="h-9 w-auto "
             />
