@@ -1,4 +1,5 @@
 import React from "react";
+import { Images } from "../../assets";
 
 /**
  * DownloadBanner
@@ -12,11 +13,8 @@ import React from "react";
  *    single link wraps the whole graphic (defaults to "#").
  */
 export default function DownloadBanner({
-  imageSrc,
   imageAlt = "Couple ordering on their phones",
-  imageLogo,
   imageLogoAlt = "Order.uk",
-  appBadgesSrc,
   appBadgesAlt = "Download on the App Store and Google Play",
   storeHref = "#",
 }) {
@@ -26,7 +24,7 @@ export default function DownloadBanner({
         {/* Image side */}
         <div className="relative lg:w-[50%] sm:w-[45%] self-end pt-6 pl-4 sm:pl-8">
           <img
-            src={imageSrc}
+            src={Images.Couple}
             alt={imageAlt}
             className="h-full w-full object-cover object-top"
             style={{
@@ -42,7 +40,7 @@ export default function DownloadBanner({
         <div className="flex flex-1 lg:w-[50%] flex-col justify-center gap-3 px-6 py-8 sm:px-4 md:px-2 lg:pl-2 lg:pr-10">
           <h1 className="flex flex-wrap items-center gap-1 text-3xl font-extrabold text-[#03081F] sm:text-4xl lg:text-5xl">
             <img
-              src={imageLogo}
+              src={Images.Logo}
               alt={imageLogoAlt}
               className="inline-block h-8 w-auto object-contain sm:h-10 lg:h-12"
             />
@@ -64,7 +62,7 @@ export default function DownloadBanner({
 
           <a href={storeHref} className="mt-1 inline-block w-fit">
             <img
-              src={appBadgesSrc}
+              src={Images.Badges}
               alt={appBadgesAlt}
               className="h-9 w-auto "
             />

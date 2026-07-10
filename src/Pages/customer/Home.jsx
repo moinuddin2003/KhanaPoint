@@ -1,14 +1,9 @@
 import React from "react";
 import DownloadBanner from "../../Components/Home/DownloadBanner";
 import GetStarted from "../../Components/Home/GetStarted";
-
-// Replace these with the actual image paths/imports you're providing.
-// import chef from "../assets/chef.png";
-import chef from "../../assets/chef.png";
-import logo from "../../assets/logo-1.png";
-import couple from "../../assets/couple.png";
-import badges from "../../assets/store-badges.png";
-import rider from "../../assets/rider.png";
+import { Images } from "../../assets";
+import Navbar from "../../Components/common/Navbar";
+import Footer from "../../Components/common/Footer";
 
 export default function Home() {
   const handlePartnerClick = () => {
@@ -22,19 +17,19 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6">
-      <DownloadBanner
-        imageLogo={logo}
-        imageSrc={couple}
-        appBadgesSrc={badges}
-      />
+    <div className="mx-auto max-w-7xl space-y-6 p-6">
+      <Navbar />
+
+      <DownloadBanner />
 
       <GetStarted
-        partnerImage={chef}
-        riderImage={rider}
+        partnerImage={Images.Chef}
+        riderImage={Images.Rider}
         onPartnerClick={handlePartnerClick}
         onRiderClick={handleRiderClick}
       />
+
+      <Footer />
     </div>
   );
 }

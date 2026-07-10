@@ -4,6 +4,7 @@ import Card from "../../Components/RestaurantDetail/Card";
 import { Images } from "../../assets";
 import { data, promos } from "../../utils/dummyData";
 import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
+import Navbar from "../../Components/common/Navbar";
 
 export default function RestaurantDetail() {
   const [userCart, setUserCart] = useState([]);
@@ -46,6 +47,7 @@ export default function RestaurantDetail() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-2 p-3">
+      <Navbar />
       <div className="space-y-14">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
           {promos.map((promo) => (
