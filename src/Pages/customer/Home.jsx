@@ -6,6 +6,9 @@ import Navbar from "../../Components/common/Navbar";
 import Footer from "../../Components/common/Footer";
 import HeroBanner from "../../Components/Home/HeroBanner";
 import AboutUs from "../../Components/Home/AboutUs";
+import RestaurantGrid from "../../Components/menu/RestaurantGrid";
+import DealsGrid from "../../Components/menu/DealsGrid";
+import CategoryGrid from "../../Components/menu/CategoryGrid";
 
 export default function Home() {
   const handlePartnerClick = () => {
@@ -26,6 +29,12 @@ export default function Home() {
 
       <HeroBanner />
       <DownloadBanner />
+
+      <div id="menu">
+        <DealsGrid />
+        <CategoryGrid />
+        <RestaurantGrid type="Popular" />
+      </div>
 
       <GetStarted
         partnerImage={Images.Chef}

@@ -67,6 +67,7 @@ const Footer = () => {
                   className="w-[45px] h-[45px] object-contain cursor-pointer hover:opacity-80 transition-opacity"
                 />
                 <img
+                
                   src={Images.Tiktok}
                   alt="TikTok"
                   className="w-[45px] h-[45px] object-contain cursor-pointer hover:opacity-80 transition-opacity"
