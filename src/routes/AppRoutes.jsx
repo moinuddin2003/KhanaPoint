@@ -6,6 +6,8 @@ import Checkout from "../Components/cart/Checkout";
 import Cart from "../Pages/customer/Cart";
 import Login from "../Pages/auth/Login";
 import Signup from "../Pages/auth/Signup";
+import DashboardHome from "../Pages/admin/DashboardHome";
+import AdminRoute from "./AdminRoute";
 // import RestaurantDetail from "../Pages/customer/RestaurantDetaill/";
 const AppRoutes = () => {
   return (
@@ -16,6 +18,16 @@ const AppRoutes = () => {
         <Route path="/" element={<Login />} />
         <Route path="/restaurants" element={<RestaurantDetail />} />
         <Route path="/cart" element={<Cart />} />
+
+        {/* Admin Section Routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <DashboardHome />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -5,8 +5,16 @@ import { Images } from "../../assets";
 import { data, promos } from "../../utils/dummyData";
 import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
 import Navbar from "../../Components/common/Navbar";
+import RestaurantGrid from "../../Components/menu/RestaurantGrid";
+import RestaurantHero from "../../Components/RestaurantDetail/RestaurantHero";
+import RestaurantOffersHeader from "../../Components/RestaurantDetail/RestaurantOffersHeader";
+import OfferCategoryTabs from "../../Components/RestaurantDetail/OfferCategoryTabs";
+import Footer from "../../Components/common/Footer";
+import Location from "../../Components/RestaurantDetail/Location";
+import Reviews from "../../Components/RestaurantDetail/Reviews";
 
 export default function RestaurantDetail() {
+  const [activeCategory, setActiveCategory] = useState("Offers");
   const [userCart, setUserCart] = useState([]);
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("UserCart")) || [];
@@ -46,39 +54,58 @@ export default function RestaurantDetail() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl space-y-2 p-3">
-      <Navbar />
-      <div className="space-y-14">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-          {promos.map((promo) => (
-            <DiscountCards
-              key={promo.id}
-              data={promo}
-              onBtnClick={() => console.log("Discount Card Clicked")}
-            />
+    <>
+      <div className="mx-auto max-w-7xl space-y-2 p-3">
+        <Navbar />
+        <RestaurantHero />
+
+        <OfferCategoryTabs
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+        />
+
+        <RestaurantOffersHeader restaurantName="McDolands" />
+        <div className="space-y-14">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+            {promos.map((promo) => (
+              <DiscountCards
+                key={promo.id}
+                data={promo}
+                onBtnClick={() => console.log("Discount Card Clicked")}
+              />
+            ))}
+          </div>
+        </div>
+        {/* Restaurant Categories With Items */}
+        <div className="space-y-14">
+          {data.map((category) => (
+            <section key={category.id}>
+              <h2 className="mb-6 text-[32px] font-bold text-[#03081F]">
+                {category.name}
+              </h2>
+
+              <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+                {category.items.map((item) => (
+                  <Card
+                    key={item.id}
+                    data={item}
+                    onBtnClick={() => handleAddToCard(item)}
+                  />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
-      </div>
-      {/* Restaurant Categories With Items */}
-      <div className="space-y-14">
-        {data.map((category) => (
-          <section key={category.id}>
-            <h2 className="mb-6 text-[32px] font-bold text-[#03081F]">
-              {category.name}
-            </h2>
 
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-              {category.items.map((item) => (
-                <Card
-                  key={item.id}
-                  data={item}
-                  onBtnClick={() => handleAddToCard(item)}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+        <Location />
+
+        <Reviews />
+        <div className="pt-22">
+          <RestaurantGrid type="Similar" />
+        </div>
+
+        <Footer />
       </div>
-    </div>
+    </>
   );
 }

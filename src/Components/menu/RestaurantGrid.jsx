@@ -2,7 +2,6 @@ import RestaurantCard from "./RestaurantCard";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getRestaurants } from "../../services/restaurantAPI";
-// const BASE_URL = "https://xht9kwsw-8000.inc1.devtunnels.ms/";
 import { BASE_URL } from "../../services/authApi";
 
 function RestaurantGrid({ type }) {

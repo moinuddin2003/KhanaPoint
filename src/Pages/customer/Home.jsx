@@ -28,13 +28,13 @@ export default function Home() {
       <Navbar />
 
       <HeroBanner />
-      <DownloadBanner />
 
       <div id="menu">
         <DealsGrid />
         <CategoryGrid />
         <RestaurantGrid type="Popular" />
       </div>
+      <DownloadBanner />
 
       <GetStarted
         partnerImage={Images.Chef}

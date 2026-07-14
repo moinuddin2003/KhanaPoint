@@ -1,10 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import deliveryIcon from "../../assets/Tracking.png";
-import contactIcon from "../../assets/ID Verified.png";
-import clockIcon from "../../assets/Clock.png";
-import pinMarker from "../../assets/Previous Location.png";
+
+import { Images } from "../../assets";
 
 // Hardcoded for now — will be replaced by API-driven data later.
 // Shape mirrors what the future restaurant object will look like.
@@ -77,7 +75,7 @@ const createNearbyPinIcon = (name, branch) =>
           margin-left:-18px;
           box-shadow:0px 4px 8px rgba(0,0,0,0.2);
         ">
-          <img src="${pinMarker}" style="width:28px; height:28px; object-fit:contain;" />
+          <img src="${Images.PinMarker}" style="width:28px; height:28px; object-fit:contain;" />
         </div>
       </div>
     `,
@@ -94,7 +92,7 @@ const Location = () => {
         <div className="flex-1 p-6 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-black/10">
           <div className="flex items-center gap-3 mb-4">
             <img
-              src={deliveryIcon}
+              src={Images.DeliveryIcon}
               alt=""
               className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
             />
@@ -119,7 +117,7 @@ const Location = () => {
         <div className="flex-1 p-6 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-black/10">
           <div className="flex items-center gap-3 mb-4">
             <img
-              src={contactIcon}
+              src={Images.ContactIcon}
               alt=""
               className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
             />
@@ -148,7 +146,7 @@ const Location = () => {
         <div className="lg:w-[416px] bg-[#03081F] text-white p-6 md:p-8 lg:p-10 m-4 rounded-[12px] lg:m-0 lg:rounded-none lg:rounded-r-[12px]">
           <div className="flex items-center gap-3 mb-4">
             <img
-              src={clockIcon}
+              src={Images.ClockIcon}
               alt=""
               className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
             />

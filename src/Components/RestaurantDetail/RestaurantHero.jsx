@@ -1,14 +1,6 @@
 import { FaClock } from "react-icons/fa";
-import { useTheme } from "../../Context/ThemeContext";
-
-import backgroundImage from "../../assets/Group 23.png";
-import backgroundDarkImage from "../../assets/Group 23 Dark.png";
-
-import burgerImage from "../../assets/Rectangle 44.png";
-import GirlPizza from "../../assets/GirlPizza.png";
-import reviewImage from "../../assets/Rectangle review.png";
-import Motocross from "../../assets/Motocross.png";
-import OrderComplete from "../../assets/Order Completed.png";
+import { useTheme } from "../../context/ThemeContext";
+import { Images } from "../../assets";
 
 export default function RestaurantHero() {
   const { theme } = useTheme();
@@ -21,7 +13,7 @@ export default function RestaurantHero() {
         <div className="relative overflow-hidden rounded-2xl h-auto min-h-80 sm:min-h-95 lg:min-h-0 lg:h-[380px] xl:h-[420px] flex flex-col lg:block justify-center py-8 lg:py-0">
           {/* Background */}
           <img
-            src={isDark ? backgroundDarkImage : backgroundImage}
+            src={isDark ? Images.bgImgDark : Images.bgImg}
             alt="Restaurant background"
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
@@ -31,14 +23,18 @@ export default function RestaurantHero() {
           ========================================= */}
           {/* Scaled down height & pushed right for laptops (lg), full size for desktop (xl) */}
           <img
-            src={burgerImage}
+            src={Images.burgerImg}
             alt="Burger showcase"
             className="hidden lg:block absolute lg:-right-4 xl:right-12 top-1/2 -translate-y-1/2 lg:h-64 xl:h-80 object-contain z-10 pointer-events-auto"
           />
 
           {/* Replaced invalid w-35 with valid sizing. Adjusted positioning to prevent overlaps on 1024px */}
           <div className="hidden lg:block absolute lg:right-[28%] xl:right-[35%] lg:top-[68%] xl:top-[62%] w-32 xl:w-44 bg-white rounded-xl shadow-xl p-3 xl:px-6 xl:py-4 z-30">
-            <img src={reviewImage} alt="Customer review" className="w-full" />
+            <img
+              src={Images.ReviewsNumber}
+              alt="Customer review"
+              className="w-full"
+            />
           </div>
 
           {/* =========================================
@@ -49,13 +45,17 @@ export default function RestaurantHero() {
             <div className="flex justify-center lg:hidden w-full order-1 px-4 mb-6 mt-4 relative">
               <div className="relative inline-flex justify-center items-center">
                 <img
-                  src={GirlPizza}
+                  src={Images.GirlPizza}
                   alt="Showcase"
                   className="h-48 sm:h-60 object-contain rounded-xl relative z-10"
                 />
                 {/* Overlapping Review Badge */}
                 <div className="absolute -left-6 sm:-left-10 top-40 -translate-y-1/2 w-20 sm:w-24 bg-white rounded-xl shadow-xl p-2 z-20">
-                  <img src={reviewImage} alt="Review" className="w-full" />
+                  <img
+                    src={Images.ReviewsNumber}
+                    alt="Review"
+                    className="w-full"
+                  />
                 </div>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function RestaurantHero() {
               <div className="flex flex-col xl:flex-row lg:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 w-full lg:w-auto">
                 <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-4 lg:py-3 rounded-full text-sm sm:text-base lg:text-sm xl:text-lg w-full lg:w-auto shadow-md">
                   <img
-                    src={Motocross}
+                    src={Images.Motocross}
                     alt="Minimum Order"
                     className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
                   />
@@ -108,7 +108,7 @@ export default function RestaurantHero() {
 
                 <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-4 lg:py-3 rounded-full text-sm sm:text-base lg:text-sm xl:text-lg w-full lg:w-auto shadow-md">
                   <img
-                    src={OrderComplete}
+                    src={Images.OrderComplete}
                     alt="Delivery Time"
                     className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
                   />

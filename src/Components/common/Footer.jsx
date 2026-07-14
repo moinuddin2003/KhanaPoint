@@ -1,10 +1,3 @@
-// import footerLogo from "../../assets/HomeAssets/FooterOrderUK.png";
-// import appStoreBadges from "../../assets/HomeAssets/app-store-badges.png";
-// import FacebookIcon from "../../assets/HomeAssets/Facebook.png";
-// import InstagramIcon from "../../assets/HomeAssets/Instagram.png";
-// import TikTokIcon from "../../assets/HomeAssets/TikTok.png";
-// import SnapchatIcon from "../../assets/HomeAssets/Snapchat.png";
-
 import { Images } from "../../assets";
 
 const Footer = () => {

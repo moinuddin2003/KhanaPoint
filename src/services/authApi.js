@@ -1,4 +1,4 @@
-export const BASE_URL = "https://xht9kwsw-8000.inc1.devtunnels.ms/";
+export const BASE_URL = "https://tgl7p3mt-8000.inc1.devtunnels.ms/";
 
 export const registerUser = async (userData) => {
   const response = await fetch(`${BASE_URL}/user/register/`, {

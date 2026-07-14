@@ -44,7 +44,13 @@ const LoginForm = () => {
         storage.setItem("accessToken", data.token.access);
         storage.setItem("refreshToken", data.token.refresh);
         alert(data.message);
-        navigate("/home");
+
+        console.log("Full Data inside login success:", data.data);
+        if (data.data && data.data.is_admin === true) {
+          navigate("/admin");
+        } else {
+          navigate("/home");
+        }
       } else {
         alert("Invalid Credentials");
       }

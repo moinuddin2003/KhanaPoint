@@ -1,5 +1,5 @@
 // import api from "./axios";
-const BASE_URL = "https://xht9kwsw-8000.inc1.devtunnels.ms/";
+import { BASE_URL } from "./authApi";
 
 export const getRestaurants = async () => {
   const response = await fetch(`${BASE_URL}restaurants/all-restaurant`, {

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import ReviewsImage from "../../assets/reviewImages.png";
-import OverallRatingImage from "../../assets/OverallRating.png";
+import { Images } from "../../assets";
 
 const reviewsData = [
   {
@@ -9,7 +8,7 @@ const reviewsData = [
     date: "24th September, 2023",
     rating: 5,
     text: "The positive aspect was undoubtedly the efficiency of the service. The queue moved quickly, the staff was friendly, and the food was up to the usual McDonald's standard – hot and satisfying.",
-    image: ReviewsImage,
+    image: Images.ReviewsImage,
   },
   {
     name: "Amara K.",
@@ -17,7 +16,7 @@ const reviewsData = [
     date: "12th October, 2023",
     rating: 4,
     text: "Incredibly fast delivery and the packaging kept everything piping hot! The loaded fries were absolute perfection, though I wish they had included a few extra sauce packets as requested.",
-    image: ReviewsImage,
+    image: Images.ReviewsImage,
   },
   {
     name: "Marcus Davies",
@@ -25,7 +24,7 @@ const reviewsData = [
     date: "05th November, 2023",
     rating: 5,
     text: "Super clean presentation and a brilliant selection on the digital menu. The custom burgers tasted remarkably fresh, and ordering via the app made tracking our driver completely seamless.",
-    image: ReviewsImage,
+    image: Images.ReviewsImage,
   },
 ];
 
@@ -61,7 +60,7 @@ const Reviews = () => {
 
         <div className="mb-6 flex justify-center">
           <img
-            src={OverallRatingImage}
+            src={Images.ReviewsNumber}
             alt="Overall Rating"
             className="w-[153px] h-[178px] rounded-[12px] bg-white border border-gray-200 shadow-sm"
           />
@@ -201,7 +200,7 @@ const Reviews = () => {
 
         <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 z-10 hidden lg:block">
           <img
-            src={OverallRatingImage}
+            src={Images.ReviewsNumber}
             alt="Overall Rating"
             className="w-[153px] h-[178px] rounded-[12px] bg-white border border-gray-200 shadow-sm"
           />

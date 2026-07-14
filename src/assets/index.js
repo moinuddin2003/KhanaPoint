@@ -1,15 +1,7 @@
-import Burger from "./burger.png";
-import Plus from "./plus.png";
-import FreeIce from "./free-ice-cream.png";
-import logo from "./logo-1.png";
-import down from "./Downward Button.png";
-import basket from "./Full Shopping Basket.png";
-import location from "./LocationIcon.png";
-
+//Home
 import chef from "./HomeAssets/chef.png";
 import couple from "./HomeAssets/couple.png";
 import rider from "./HomeAssets/rider.png";
-
 import orangeShape from "./HomeAssets/OrangeShape.png";
 import Hero1 from "./HomeAssets/Hero1.png";
 import Hero1Dark from "./HomeAssets/Hero2Dark.png";
@@ -20,10 +12,35 @@ import img1 from "./HomeAssets/1.png";
 import img2 from "./HomeAssets/2.png";
 import img3 from "./HomeAssets/3.png";
 
+//Restaurants
+import Burger from "./RestaurantAssets/burger.png";
+import Plus from "./RestaurantAssets/plus.png";
+import FreeIce from "./RestaurantAssets/free-ice-cream.png";
+import logo from "./RestaurantAssets/logo-1.png";
+import down from "./RestaurantAssets/Downward Button.png";
+import basket from "./RestaurantAssets/Full Shopping Basket.png";
+import location from "./RestaurantAssets/LocationIcon.png";
+
+import backgroundImage from "./RestaurantAssets/bgImg.png";
+import backgroundDarkImage from "./RestaurantAssets/bgImgDark.png";
+
+import burgerImage from "./RestaurantAssets/Rectangle 44.png";
+import GirlPizza from "./RestaurantAssets/GirlPizza.png";
+import reviewNumber from "./RestaurantAssets/OverallRating.png";
+import Motocross from "./RestaurantAssets/Motocross.png";
+import OrderComplete from "./RestaurantAssets/Order Completed.png";
+
+import ReviewsImage from "./RestaurantAssets/reviewImages.png";
+
+import deliveryIcon from "./RestaurantAssets/Tracking.png";
+import contactIcon from "./RestaurantAssets/ID Verified.png";
+import clockIcon from "./RestaurantAssets/Clock.png";
+import pinMarker from "./RestaurantAssets/Previous Location.png";
+
 import AboutPlaceOrder from "./order-food 1.png";
 import AboutTrack from "./AboutTrack.png";
 import AboutOrder from "./order 1.png";
-
+//Footer
 import footerLogo from "./FooterOrderUK.png";
 import appStoreBadges from "./store-badges.png";
 import FacebookIcon from "./Facebook.png";
@@ -66,6 +83,21 @@ export const Images = {
   Track: AboutTrack,
   Order: AboutOrder,
   Place: AboutPlaceOrder,
+
+  //Restaurant
+  bgImg: backgroundImage,
+  bgImgDark: backgroundDarkImage,
+  burgerImg: burgerImage,
+  GirlPizza: GirlPizza,
+  ReviewsNumber: reviewNumber,
+  MotoCross: Motocross,
+  OrderComplete: OrderComplete,
+  ReviewsImage: ReviewsImage,
+
+  PinMarker: pinMarker,
+  ClockIcon: clockIcon,
+  ContactIcon: contactIcon,
+  DeliveryIcon: deliveryIcon,
 
   //Footer
   FooterUK: footerLogo,
