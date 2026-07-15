@@ -4,83 +4,31 @@ import DealCard from "./DealCard";
 import { BASE_URL } from "../../services/authApi";
 import { getDealCategories, getDeals } from "../../services/restaurantAPI";
 
-const getDealCategoryName = (deal) => {
-  const candidates = [
-    deal?.category?.name,
-    deal?.category_name,
-    deal?.category?.title,
-    deal?.items?.[0]?.menu_item?.category?.name,
-    deal?.items?.[0]?.menu_item?.category_name,
-  ];
-
-  return candidates.find((value) => Boolean(value));
-};
-
-const getDealCategoryId = (deal) => {
-  const candidates = [
-    deal?.category?.id,
-    deal?.category_id,
-    deal?.items?.[0]?.menu_item?.category?.id,
-  ];
-
-  return candidates.find(
-    (value) => value !== undefined && value !== null && value !== "",
-  );
-};
-
 function DealsGrid() {
   const [activeTab, setActiveTab] = useState("all");
   const [deals, setDeals] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const fetchDeals = async () => {
+    const fetchData = async () => {
       try {
-        const [dealsData, categoriesData] = await Promise.all([
-          getDeals(),
-          getDealCategories(),
+        const [dealsResponse, categoriesResponse] = await Promise.all([
+          getDeals(), // Aapki deals fetch karne ka function
+          getDealCategories(), // Aapki categories fetch karne ka function
         ]);
 
-        const normalizedDeals = Array.isArray(dealsData) ? dealsData : [];
-        setDeals(normalizedDeals);
+        // API response se direct array nikal rahe hain (response.data)
+        const rawDeals = dealsResponse?.data || [];
+        const rawCategories = categoriesResponse?.data || [];
 
-        const normalizedCategories = (
-          Array.isArray(categoriesData) ? categoriesData : []
-        )
-          .map((category) => ({
-            id: category.id ?? category.slug ?? category.name,
-            name:
-              category.name ??
-              category.title ??
-              category.category_name ??
-              "Unknown",
-          }))
-          .filter((category) => category.name);
-
-        if (normalizedCategories.length > 0) {
-          setCategories(normalizedCategories);
-        } else {
-          const derivedCategories = normalizedDeals
-            .map((deal) => ({
-              id: getDealCategoryId(deal),
-              name: getDealCategoryName(deal),
-            }))
-            .filter((category) => category.name)
-            .filter(
-              (category, index, self) =>
-                index === self.findIndex((item) => item.name === category.name),
-            );
-
-          setCategories(derivedCategories);
-        }
+        setDeals(rawDeals);
+        setCategories(rawCategories);
       } catch (error) {
-        console.error(error);
-        setDeals([]);
-        setCategories([]);
+        console.error("Data fetch karne mein masla hua:", error);
       }
     };
 
-    fetchDeals();
+    fetchData();
   }, []);
 
   const tabs = [{ id: "all", name: "All" }, ...categories];
@@ -88,16 +36,10 @@ function DealsGrid() {
     activeTab === "all"
       ? deals
       : deals.filter((deal) => {
-          const currentCategoryId = getDealCategoryId(deal);
-          const currentCategoryName = getDealCategoryName(deal);
-          const selectedCategory = categories.find(
-            (category) => category.id === activeTab,
-          );
-
-          return (
-            currentCategoryId === activeTab ||
-            currentCategoryName === selectedCategory?.name
-          );
+          // Deal ke pehle item ki category ID nikalna
+          const firstItemCategoryId = deal?.items?.[0]?.menu_item?.category?.id;
+          return firstItemCategoryId === Number(activeTab);
+          // Matlab: Deal ke andar jao -> uske pehle item (index 0) par jao -> uske menu_item par jao -> uski category par jao -> aur uski ID ko select kiye gaye tab ki ID se match kar lo. Bas!
         });
 
   return (
@@ -125,7 +67,7 @@ function DealsGrid() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 sm:px-6 py-2 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer ${
+              className={`px-5 py-2 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer flex-shrink-0 ${
                 activeTab === tab.id
                   ? "border border-orange-500 bg-white font-bold text-black"
                   : "border border-transparent font-medium text-gray-700 hover:bg-black/5 hover:text-black"
