@@ -1,56 +1,105 @@
 // components/menu/DealsGrid.jsx
 import { useState, useEffect } from "react";
-import DealCard from "./dealCard";
-import {} from "../../services/restaurantAPI";
+import DealCard from "./DealCard";
 import { BASE_URL } from "../../services/authApi";
-import { getDeals } from "../../services/restaurantAPI";
+import { getDealCategories, getDeals } from "../../services/restaurantAPI";
 
-const tabs = ["Vegan", "Sushi", "Pizza & Fast Food", "Others"];
+const getDealCategoryName = (deal) => {
+  const candidates = [
+    deal?.category?.name,
+    deal?.category_name,
+    deal?.category?.title,
+    deal?.items?.[0]?.menu_item?.category?.name,
+    deal?.items?.[0]?.menu_item?.category_name,
+  ];
 
-const deals = [
-  {
-    id: 1,
-    image: "/src/assets/deal1.png",
-    name: "Deal 1",
-    restaurantLabel: "Restaurant A",
-    discount: "-20%",
-  },
-  {
-    id: 2,
-    image: "/src/assets/deal2.png",
-    name: "Deal 2",
-    restaurantLabel: "Restaurant B",
-    discount: "-40%",
-  },
-  {
-    id: 3,
-    image: "/src/assets/deal3.png",
-    name: "Deal 3",
-    restaurantLabel: "Restaurant C",
-    discount: "-17%",
-  },
-];
+  return candidates.find((value) => Boolean(value));
+};
+
+const getDealCategoryId = (deal) => {
+  const candidates = [
+    deal?.category?.id,
+    deal?.category_id,
+    deal?.items?.[0]?.menu_item?.category?.id,
+  ];
+
+  return candidates.find(
+    (value) => value !== undefined && value !== null && value !== "",
+  );
+};
 
 function DealsGrid() {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState("all");
   const [deals, setDeals] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const data = await getDeals();
-        // console.log(Array.isArray(data)); // true or false
-        console.log(data);
-        setDeals(data);
+        const [dealsData, categoriesData] = await Promise.all([
+          getDeals(),
+          getDealCategories(),
+        ]);
+
+        const normalizedDeals = Array.isArray(dealsData) ? dealsData : [];
+        setDeals(normalizedDeals);
+
+        const normalizedCategories = (
+          Array.isArray(categoriesData) ? categoriesData : []
+        )
+          .map((category) => ({
+            id: category.id ?? category.slug ?? category.name,
+            name:
+              category.name ??
+              category.title ??
+              category.category_name ??
+              "Unknown",
+          }))
+          .filter((category) => category.name);
+
+        if (normalizedCategories.length > 0) {
+          setCategories(normalizedCategories);
+        } else {
+          const derivedCategories = normalizedDeals
+            .map((deal) => ({
+              id: getDealCategoryId(deal),
+              name: getDealCategoryName(deal),
+            }))
+            .filter((category) => category.name)
+            .filter(
+              (category, index, self) =>
+                index === self.findIndex((item) => item.name === category.name),
+            );
+
+          setCategories(derivedCategories);
+        }
       } catch (error) {
         console.error(error);
+        setDeals([]);
+        setCategories([]);
       }
     };
 
     fetchDeals();
   }, []);
 
-  console.log(deals);
+  const tabs = [{ id: "all", name: "All" }, ...categories];
+  const filteredDeals =
+    activeTab === "all"
+      ? deals
+      : deals.filter((deal) => {
+          const currentCategoryId = getDealCategoryId(deal);
+          const currentCategoryName = getDealCategoryName(deal);
+          const selectedCategory = categories.find(
+            (category) => category.id === activeTab,
+          );
+
+          return (
+            currentCategoryId === activeTab ||
+            currentCategoryName === selectedCategory?.name
+          );
+        });
+
   return (
     <section className="px-6 py-8">
       <div className="flex items-center">
@@ -61,65 +110,73 @@ function DealsGrid() {
         {/* Mobile: dropdown */}
         <select
           value={activeTab}
-          onChange={(e) => setActiveTab(Number(e.target.value))}
+          onChange={(e) => setActiveTab(e.target.value)}
           className="lg:hidden ml-auto mb-4 border border-orange-500 rounded-full px-4 py-2 text-sm font-medium text-black bg-white"
         >
-          {tabs.map((tab, index) => (
-            <option key={tab} value={index}>
-              {tab}
+          {tabs.map((tab) => (
+            <option key={tab.id} value={tab.id}>
+              {tab.name}
             </option>
           ))}
         </select>
 
-        <nav className="hidden lg:flex flex-wrap justify-end gap-1 mb-4 ml-auto">
-          {tabs.map((tab, index) => (
+        <nav className="hidden lg:flex overflow-x-auto scrollbar-hide gap-2 mb-4 ml-auto max-w-[60%] pb-1 scroll-smooth">
+          {tabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(index)}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               className={`px-4 sm:px-6 py-2 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer ${
-                activeTab === index
+                activeTab === tab.id
                   ? "border border-orange-500 bg-white font-bold text-black"
                   : "border border-transparent font-medium text-gray-700 hover:bg-black/5 hover:text-black"
               }`}
             >
-              {tab}
+              {tab.name}
             </button>
           ))}
         </nav>
       </div>
 
-      {/* Mobile: horizontal sliding row */}
-      <div className="flex lg:hidden gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2">
-        {deals.map((deal) => (
-          <DealCard
-            key={deal.id}
-            image={`${BASE_URL}${deal.image}`}
-            name={deal.name}
-            restaurantLabel={
-              deal.items?.[0]?.menu_item?.restaurant?.name ||
-              "Unknown Restaurant"
-            }
-            discount={deal.combo_price}
-            compact
-          />
-        ))}
-      </div>
+      {filteredDeals.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          No deals available for this category yet.
+        </p>
+      ) : (
+        <>
+          {/* Mobile: horizontal sliding row */}
+          <div className="flex lg:hidden gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2">
+            {filteredDeals.map((deal) => (
+              <DealCard
+                key={deal.id}
+                image={`${BASE_URL}${deal.image}`}
+                name={deal.name}
+                restaurantLabel={
+                  deal.items?.[0]?.menu_item?.restaurant?.name ||
+                  "Unknown Restaurant"
+                }
+                discount={deal.combo_price}
+                compact
+              />
+            ))}
+          </div>
 
-      {/* Desktop: 3-column grid */}
-      <div className="hidden lg:grid grid-cols-3 gap-5">
-        {deals.map((deal) => (
-          <DealCard
-            key={deal.id}
-            image={`${BASE_URL}${deal.image}`}
-            name={deal.name}
-            restaurantLabel={
-              deal.items?.[0]?.menu_item?.restaurant?.name ||
-              "Unknown Restaurant"
-            }
-            discount={`\$${deal.combo_price}`}
-          />
-        ))}
-      </div>
+          {/* Desktop: 3-column grid */}
+          <div className="hidden lg:grid grid-cols-3 gap-5">
+            {filteredDeals.map((deal) => (
+              <DealCard
+                key={deal.id}
+                image={`${BASE_URL}${deal.image}`}
+                name={deal.name}
+                restaurantLabel={
+                  deal.items?.[0]?.menu_item?.restaurant?.name ||
+                  "Unknown Restaurant"
+                }
+                discount={`$${deal.combo_price}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

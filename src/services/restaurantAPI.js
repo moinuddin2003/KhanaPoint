@@ -34,3 +34,14 @@ export const getDeals = async () => {
   const data = await response.json();
   return data.data;
 };
+
+export const getDealCategories = async () => {
+  const response = await fetch(`${BASE_URL}restaurants/all-category`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch deal categories");
+  }
+
+  const data = await response.json();
+  return data.data || [];
+};
