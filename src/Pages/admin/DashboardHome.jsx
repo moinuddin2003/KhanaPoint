@@ -4,15 +4,34 @@ import {
   ShoppingCart,
   RefreshCw,
   AlertCircle,
-  LogOut,
-  Menu,
   Store,
 } from "lucide-react";
 import Analytics from "./Analytics";
 import ManageOrders from "./ManageOrders";
+import ManageCatalog from "./ManageCatalog";
 
 import { BASE_URL } from "../../services/authApi";
-import ManageMenu from "./ManageMenu";
+
+const TABS = [
+  { key: "analytics", label: "Analytics Overview", icon: LayoutDashboard },
+  { key: "orders", label: "Manage Orders", icon: ShoppingCart },
+  { key: "catalog", label: "Restaurants", icon: Store },
+];
+
+const TAB_COPY = {
+  analytics: {
+    title: "Dashboard Analytics",
+    subtitle: "Check restaurant trends, system metrics, and total summaries.",
+  },
+  orders: {
+    title: "Order Management",
+    subtitle: "Control, verify, and filter customer orders in real-time.",
+  },
+  catalog: {
+    title: "Restaurants & Menu",
+    subtitle: "Browse restaurants, categories, menu items, and active deals.",
+  },
+};
 
 export default function DashboardHome() {
   const [activeTab, setActiveTab] = useState("analytics");
@@ -45,6 +64,7 @@ export default function DashboardHome() {
         Authorization: token ? `Bearer ${token}` : "",
       };
 
+      // NOTE: BASE_URL already ends in "/" — never prefix these paths with "/"
       const [
         resOverview,
         resStatus,
@@ -54,26 +74,22 @@ export default function DashboardHome() {
         resRevTime,
         resOrders,
       ] = await Promise.all([
-        fetch(`${BASE_URL}/order/admin/analytics/overview/`, { headers }),
-        fetch(`${BASE_URL}/order/admin/analytics/orders-by-status/`, {
+        fetch(`${BASE_URL}order/admin/analytics/overview/`, { headers }),
+        fetch(`${BASE_URL}order/admin/analytics/orders-by-status/`, {
           headers,
         }),
-        fetch(`${BASE_URL}/order/admin/analytics/popular-deals/`, {
+        fetch(`${BASE_URL}order/admin/analytics/popular-deals/`, { headers }),
+        fetch(`${BASE_URL}order/admin/analytics/popular-items/`, { headers }),
+        fetch(`${BASE_URL}order/admin/analytics/revenue-by-restaurant/`, {
           headers,
         }),
-        fetch(`${BASE_URL}/order/admin/analytics/popular-items/`, {
+        fetch(`${BASE_URL}order/admin/analytics/revenue-over-time/`, {
           headers,
         }),
-        fetch(`${BASE_URL}/order/admin/analytics/revenue-by-restaurant/`, {
-          headers,
-        }),
-        fetch(`${BASE_URL}/order/admin/analytics/revenue-over-time/`, {
-          headers,
-        }),
-        fetch(`${BASE_URL}/order/admin/orders`, { headers }),
+        fetch(`${BASE_URL}order/admin/orders`, { headers }),
       ]);
 
-      if (resOverview.status === 401) {
+      if (resOverview.status === 401 || resOrders.status === 401) {
         setError("Unauthorized access. Please login as an admin.");
         return;
       }
@@ -92,10 +108,10 @@ export default function DashboardHome() {
       ] = await Promise.all([
         resOverview.json(),
         resStatus.json(),
-        resDeals.json(),
-        resItems.json(),
-        resRevRestaurant.json(),
-        resRevTime.json(),
+        resDeals.ok ? resDeals.json() : [],
+        resItems.ok ? resItems.json() : [],
+        resRevRestaurant.ok ? resRevRestaurant.json() : [],
+        resRevTime.ok ? resRevTime.json() : [],
         resOrders.json(),
       ]);
 
@@ -148,6 +164,8 @@ export default function DashboardHome() {
     );
   }
 
+  const copy = TAB_COPY[activeTab];
+
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-800">
       {/* Sidebar navigation */}
@@ -163,41 +181,24 @@ export default function DashboardHome() {
           </div>
 
           <nav className="space-y-1">
-            <button
-              onClick={() => setActiveTab("analytics")}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === "analytics"
-                  ? "bg-blue-50 text-blue-600"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              Analytics Overview
-            </button>
-            <button
-              onClick={() => setActiveTab("orders")}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === "orders"
-                  ? "bg-blue-50 text-blue-600"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              }`}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Manage Orders
-            </button>
-
-            <button
-              onClick={() => setActiveTab("menu")}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                activeTab === "menu"
-                  ? "bg-blue-50 text-blue-600"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              }`}
-            >
-              <Store className="h-4 w-4" />{" "}
-              {/* Lucide icons se Store import kar lein */}
-              Manage Menu
-            </button>
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
+                    isActive
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
           </nav>
         </div>
 
@@ -223,15 +224,9 @@ export default function DashboardHome() {
         <header className="flex justify-between items-center mb-8 border-b border-slate-200 pb-5">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              {activeTab === "analytics"
-                ? "Dashboard Analytics"
-                : "Order Management"}
+              {copy.title}
             </h1>
-            <p className="text-slate-500 text-xs mt-1">
-              {activeTab === "analytics"
-                ? "Check restaurant trends, system metrics, and total summaries."
-                : "Control, verify, and filter customer orders in real-time."}
-            </p>
+            <p className="text-slate-500 text-xs mt-1">{copy.subtitle}</p>
           </div>
           <button
             onClick={fetchData}
@@ -256,7 +251,7 @@ export default function DashboardHome() {
           <ManageOrders initialOrders={orders} apiBaseUrl={BASE_URL} />
         )}
 
-        {activeTab === "menu" && <ManageMenu />}
+        {activeTab === "catalog" && <ManageCatalog />}
       </main>
     </div>
   );

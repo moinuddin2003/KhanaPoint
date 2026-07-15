@@ -4,32 +4,43 @@ import { Search } from "lucide-react";
 export default function ManageOrders({ initialOrders = [], apiBaseUrl }) {
   const [orders, setOrders] = useState(initialOrders);
   const [searchTerm, setSearchTerm] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
 
   // Handle live PATCH update
   const handleUpdateStatus = async (orderId, newStatus) => {
+    setUpdatingId(orderId);
     try {
-      const token = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
+      const token =
+        localStorage.getItem("accessToken") ||
+        sessionStorage.getItem("accessToken");
 
-      const response = await fetch(`${apiBaseUrl}/order/admin/orders/${orderId}/status/`, {
-        method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : ''
+      // NOTE: apiBaseUrl already ends in "/" — no leading slash here
+      const response = await fetch(
+        `${apiBaseUrl}order/admin/orders/${orderId}/status/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+          body: JSON.stringify({ status: newStatus }),
         },
-        body: JSON.stringify({ status: newStatus })
-      });
+      );
 
       if (response.ok) {
-        setOrders(prevOrders => 
-          prevOrders.map(order => 
-            order.id === orderId ? { ...order, status: newStatus } : order
-          )
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === orderId ? { ...order, status: newStatus } : order,
+          ),
         );
       } else {
         alert("Failed to update status on the backend server.");
       }
     } catch (err) {
       console.error("Error patching order status:", err);
+      alert("Network error while updating order status.");
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -111,10 +122,11 @@ export default function ManageOrders({ initialOrders = [], apiBaseUrl }) {
                     <td className="px-6 py-4">
                       <select
                         value={order.status}
+                        disabled={updatingId === order.id}
                         onChange={(e) =>
                           handleUpdateStatus(order.id, e.target.value)
                         }
-                        className="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-1.5 font-semibold transition cursor-pointer"
+                        className="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 block p-1.5 font-semibold transition cursor-pointer disabled:opacity-50"
                       >
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
