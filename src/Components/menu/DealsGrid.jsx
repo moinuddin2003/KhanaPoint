@@ -13,13 +13,18 @@ function DealsGrid() {
     const fetchData = async () => {
       try {
         const [dealsResponse, categoriesResponse] = await Promise.all([
-          getDeals(), // Aapki deals fetch karne ka function
-          getDealCategories(), // Aapki categories fetch karne ka function
+          getDeals(),
+          getDealCategories(),
         ]);
 
-        // API response se direct array nikal rahe hain (response.data)
-        const rawDeals = dealsResponse?.data || [];
-        const rawCategories = categoriesResponse?.data || [];
+        // Bilkul safe tarike se data extract karna:
+        // Agar response ke andar .data hai toh wo le, warna direct response ko use kare
+        const rawDeals =
+          dealsResponse?.data ||
+          (Array.isArray(dealsResponse) ? dealsResponse : []);
+        const rawCategories =
+          categoriesResponse?.data ||
+          (Array.isArray(categoriesResponse) ? categoriesResponse : []);
 
         setDeals(rawDeals);
         setCategories(rawCategories);
@@ -31,15 +36,16 @@ function DealsGrid() {
     fetchData();
   }, []);
 
+  // Tabs ki list banana ("All" ko shuru mein add kar ke)
   const tabs = [{ id: "all", name: "All" }, ...categories];
+
+  // Deals ko filter karne ki seedhi logic
   const filteredDeals =
     activeTab === "all"
       ? deals
       : deals.filter((deal) => {
-          // Deal ke pehle item ki category ID nikalna
           const firstItemCategoryId = deal?.items?.[0]?.menu_item?.category?.id;
           return firstItemCategoryId === Number(activeTab);
-          // Matlab: Deal ke andar jao -> uske pehle item (index 0) par jao -> uske menu_item par jao -> uski category par jao -> aur uski ID ko select kiye gaye tab ki ID se match kar lo. Bas!
         });
 
   return (
@@ -62,6 +68,7 @@ function DealsGrid() {
           ))}
         </select>
 
+        {/* Desktop: scrollable tabs */}
         <nav className="hidden lg:flex overflow-x-auto scrollbar-hide gap-2 mb-4 ml-auto max-w-[60%] pb-1 scroll-smooth">
           {tabs.map((tab) => (
             <button

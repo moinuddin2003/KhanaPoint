@@ -3,12 +3,13 @@ import { Images } from "../../assets";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import RestaurantDropdown from "./RestaurantDropdown"; // Naya dropdown import kiya
 
 const navLinks = [
   { label: "Home", path: "/Home" },
   { label: "Browse Menu", path: "/#menu" },
   { label: "Special Offers", path: "/offers" },
-  { label: "Restaurants", path: "/restaurants" },
+  // "Restaurants" ko yahan se nikaal diya kyunke uski dropdown logic alag hai
   { label: "Track Order", path: "/orders/track" },
 ];
 
@@ -81,13 +82,31 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* bilkul saaf aur simple loop, koi extra conditions nahi */}
           <nav className="flex items-center font-sans text-xs sm:text-sm font-semibold whitespace-nowrap">
-            {navLinks.map((link) => (
+            {/* Pehle 3 links (Home, Browse Menu, Special Offers) */}
+            {navLinks.slice(0, 3).map((link) => (
               <NavLink
                 key={link.label}
                 to={link.path}
                 end={link.path === "/"}
+                className={({ isActive }) =>
+                  isActive
+                    ? "px-5 py-2.5 bg-[#FC8A06] text-white rounded-full transition-colors duration-200"
+                    : "px-4 py-2 text-brand-dark hover:text-[#FC8A06] transition-colors duration-200"
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
+
+            {/* Beech mein Restaurant Dropdown */}
+            <RestaurantDropdown isMobile={false} />
+
+            {/* Baqi bache hue links (Track Order wagera) */}
+            {navLinks.slice(3).map((link) => (
+              <NavLink
+                key={link.label}
+                to={link.path}
                 className={({ isActive }) =>
                   isActive
                     ? "px-5 py-2.5 bg-[#FC8A06] text-white rounded-full transition-colors duration-200"
@@ -189,11 +208,34 @@ const Navbar = () => {
       {/* Mobile Menu Dropdown Wrapper */}
       {menuOpen && (
         <div className="lg:hidden w-full px-4 py-4 flex flex-col gap-4 bg-white border-b border-black/10 relative z-50">
-          {navLinks.map((link) => (
+          {/* Pehle 3 Links */}
+          {navLinks.slice(0, 3).map((link) => (
             <NavLink
               key={link.label}
               to={link.path}
               end={link.path === "/"}
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#FC8A06] font-semibold"
+                  : "text-brand-dark font-medium hover:text-[#FC8A06]"
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
+
+          {/* Mobile Dropdown */}
+          <RestaurantDropdown
+            isMobile={true}
+            closeMobileMenu={() => setMenuOpen(false)}
+          />
+
+          {/* Baqi bache hue Links */}
+          {navLinks.slice(3).map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.path}
               onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 isActive

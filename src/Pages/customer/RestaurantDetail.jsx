@@ -4,12 +4,10 @@ import Card from "../../Components/RestaurantDetail/Card";
 import { Images } from "../../assets";
 import { data, promos } from "../../utils/dummyData";
 import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
-import Navbar from "../../Components/common/Navbar";
 import RestaurantGrid from "../../Components/menu/RestaurantGrid";
 import RestaurantHero from "../../Components/RestaurantDetail/RestaurantHero";
 import RestaurantOffersHeader from "../../Components/RestaurantDetail/RestaurantOffersHeader";
 import OfferCategoryTabs from "../../Components/RestaurantDetail/OfferCategoryTabs";
-import Footer from "../../Components/common/Footer";
 import Location from "../../Components/RestaurantDetail/Location";
 import Reviews from "../../Components/RestaurantDetail/Reviews";
 
@@ -21,42 +19,38 @@ export default function RestaurantDetail() {
     setUserCart(storedCart);
   }, []);
 
-  const handleAddToCard = (item) => {
-    console.log(item);
-    const existingItem = userCart.find((cartItem) => cartItem.id === item.id);
+  const handleAddToCard = async (item) => {
+    setLoading(true);
+    try {
+      // 1. Check if this menu item is already in our backend cart
+      // Note: If your GET /order/cart/ items object has a structure, we look for a match
+      const existingCartItem = userCart.find(
+        (cartItem) => cartItem.name === item.name,
+      );
 
-    let updatedCart;
+      if (existingCartItem) {
+        // If it exists in the cart, increment its quantity using its Cart Item ID (existingCartItem.id)
+        const newQuantity = existingCartItem.quantity + 1;
+        await cartApi.updateItemQuantity(existingCartItem.id, newQuantity);
+      } else {
+        // If it is not in the cart, add it as a new menu_item_id
+        await cartApi.addToCart(item.id);
+      }
 
-    if (existingItem) {
-      updatedCart = userCart.map((cartItem) => {
-        if (cartItem.id === item.id) {
-          return {
-            ...cartItem,
-            quantity: cartItem.quantity + 1,
-          };
-        }
-        console.log("This is cart item", cartItem);
-        console.log(
-          "If Updated Cart When quantity is more than 1",
-          updatedCart,
-        );
-        return cartItem;
-      });
-    } else {
-      updatedCart = [...userCart, { ...item }];
-      console.log("else Updated Cart When the item is new", updatedCart);
+      // 2. Re-fetch the updated cart from the database to update the local React state
+      await fetchCart();
+      window.alert("Cart Updated");
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      window.alert("Failed to update cart. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem("UserCart", JSON.stringify(updatedCart));
-    setUserCart(updatedCart);
-
-    window.alert("Cart Updated");
   };
 
   return (
     <>
       <div className="mx-auto max-w-7xl space-y-2 p-3">
-        <Navbar />
         <RestaurantHero />
 
         <OfferCategoryTabs
@@ -104,7 +98,6 @@ export default function RestaurantDetail() {
           <RestaurantGrid type="Similar" />
         </div>
 
-        <Footer />
       </div>
     </>
   );

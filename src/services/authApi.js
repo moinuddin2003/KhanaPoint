@@ -1,7 +1,9 @@
-export const BASE_URL = "https://tgl7p3mt-8000.inc1.devtunnels.ms/";
+export const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://tgl7p3mt-8000.inc1.devtunnels.ms/";
 
 export const registerUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}/user/register/`, {
+  const response = await fetch(`${BASE_URL}user/register/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,7 +19,7 @@ export const registerUser = async (userData) => {
 };
 
 export const loginUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}/user/login/`, {
+  const response = await fetch(`${BASE_URL}user/login/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,4 +32,89 @@ export const loginUser = async (userData) => {
   const data = await response.json();
 
   return data;
+};
+
+const getHeaders = () => {
+  const token = sessionStorage.getItem("accessToken");
+  
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    // Django REST Framework JWT typically uses Bearer or JWT prefix
+    headers["Authorization"] = `Bearer ${token}`; 
+  }
+
+  return headers;
+};
+
+export const cartApi = {
+  // 1. GET: Fetch current cart items
+  getCart: async () => {
+    const response = await fetch(`${BASE_URL}order/cart/`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch cart");
+    return response.json();
+  },
+
+  // 2. POST: Add item to cart
+  addToCart: async (menuItemId, dealId = null) => {
+    const payload = {
+      menu_item_id: menuItemId,
+      deal_id: dealId,
+    };
+
+    const response = await fetch(`${BASE_URL}order/cart/add/`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error("Failed to add item to cart");
+    return response.json();
+  },
+
+  // 3. PATCH: Update item quantity
+  updateItemQuantity: async (itemId, quantity) => {
+    const response = await fetch(`${BASE_URL}order/cart/update-item/${itemId}/`, {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify({ quantity }),
+    });
+    if (!response.ok) throw new Error("Failed to update item quantity");
+    return response.json();
+  },
+
+  // 4. DELETE: Remove item from cart
+  deleteItem: async (itemId) => {
+    const response = await fetch(`${BASE_URL}order/cart/delete-item/${itemId}/`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to delete item from cart");
+    return response;
+  },
+
+  // 5. POST: Complete Checkout / Place Order
+  checkout: async (checkoutData) => {
+    const response = await fetch(`${BASE_URL}order/checkout/`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(checkoutData),
+    });
+    if (!response.ok) throw new Error("Failed to place order");
+    return response.json();
+  },
+
+  // 6. GET: Get order details (Tracking)
+  getOrderDetails: async (orderId) => {
+    const response = await fetch(`${BASE_URL}order/order/${orderId}/`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch order details");
+    return response.json();
+  }
 };

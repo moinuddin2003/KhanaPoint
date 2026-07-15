@@ -8,16 +8,20 @@ import Login from "../Pages/auth/Login";
 import Signup from "../Pages/auth/Signup";
 import DashboardHome from "../Pages/admin/DashboardHome";
 import AdminRoute from "./AdminRoute";
+import Layout from "../Components/layout/Layout";
 // import RestaurantDetail from "../Pages/customer/RestaurantDetaill/";
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/restaurants/:rest_id" element={<RestaurantDetail />} />
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Login />} />
-        <Route path="/restaurants" element={<RestaurantDetail />} />
-        <Route path="/cart" element={<Cart />} />
 
         {/* Admin Section Routes */}
         <Route

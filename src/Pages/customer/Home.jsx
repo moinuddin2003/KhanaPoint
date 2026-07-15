@@ -2,8 +2,6 @@ import React from "react";
 import DownloadBanner from "../../Components/Home/DownloadBanner";
 import GetStarted from "../../Components/Home/GetStarted";
 import { Images } from "../../assets";
-import Navbar from "../../Components/common/Navbar";
-import Footer from "../../Components/common/Footer";
 import HeroBanner from "../../Components/Home/HeroBanner";
 import AboutUs from "../../Components/Home/AboutUs";
 import RestaurantGrid from "../../Components/menu/RestaurantGrid";
@@ -25,7 +23,6 @@ export default function Home() {
     <div className="">
       {/* // mx-auto max-w-7xl space-y-6 p-6 */}
 
-      <Navbar />
 
       <HeroBanner />
 
@@ -43,7 +40,6 @@ export default function Home() {
         onRiderClick={handleRiderClick}
       />
       <AboutUs />
-      <Footer />
     </div>
   );
 }
