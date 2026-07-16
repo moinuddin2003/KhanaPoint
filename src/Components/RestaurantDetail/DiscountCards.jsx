@@ -8,22 +8,28 @@ const DiscountCard = ({ data, onBtnClick }) => {
       <img
         src={data.image}
         alt={data.title}
-        className="h-auto w-full object-cover"
+        className="h-full w-full object-cover"
       />
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
-      {/* Discount Badge */}
+      {/* Price Badge (Using dynamic combo price) */}
       <div className="absolute right-4 top-0 rounded-b-xl bg-[#03081F] px-5 py-3">
-        <span className="text-sm font-semibold text-white">{data.badge}</span>
+        <span className="text-sm font-semibold text-white">
+          {data.discount ? `${data.discount}` : "Offer"}
+        </span>
       </div>
 
-      {/* Text */}
-      <div className="absolute bottom-5 left-5">
-        <p className="mb-1 text-sm font-medium text-[#FC8A06]">{data.brand}</p>
+      {/* Content */}
+      <div className="absolute bottom-5 left-5 right-16">
+        {data.description && (
+          <p className="mb-1 text-xs font-medium text-[#FC8A06] line-clamp-1">
+            {data.description}
+          </p>
+        )}
 
-        <h2 className="text-[32px] font-bold leading-none text-white">
+        <h2 className="text-[24px] md:text-[28px] font-bold leading-tight text-white line-clamp-2">
           {data.title}
         </h2>
       </div>

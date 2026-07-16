@@ -1,20 +1,55 @@
 import { Link, NavLink } from "react-router";
 import { Images } from "../../assets";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import RestaurantDropdown from "./RestaurantDropdown"; // Naya dropdown import kiya
+import RestaurantDropdown from "./RestaurantDropdown";
+import { cartApi } from "../../services/authApi";
 
 const navLinks = [
   { label: "Home", path: "/Home" },
   { label: "Browse Menu", path: "/#menu" },
   { label: "Special Offers", path: "/offers" },
-  // "Restaurants" ko yahan se nikaal diya kyunke uski dropdown logic alag hai
   { label: "Track Order", path: "/orders/track" },
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0.0);
+
+  useEffect(() => {
+    const fetchNavbarCartData = async () => {
+      try {
+        const response = await cartApi.getCart();
+        console.log("API Response:", response); // Console mein check karne ke liye
+
+        // 1. Safe access 'data' object from response
+        const cartData = response?.data;
+
+        // 2. 'items' array nikalen aur uski length set karein
+        const itemsList = cartData?.items || [];
+        const totalCount = itemsList.length;
+        setCartCount(totalCount);
+        console.log("Total items in cart:", totalCount);
+
+        // 3. 'total_price' ko direct data object se uthayein
+        const totalPrice = cartData?.total_price || 0.0;
+        setCartTotal(parseFloat(totalPrice).toFixed(2));
+        console.log("Total price:", totalPrice);
+      } catch (error) {
+        console.error("Navbar cart count fetch error:", error);
+      }
+    };
+
+    fetchNavbarCartData();
+
+    // Auto-update ke liye event listener (taake add-to-cart hote hi navbar refresh ho)
+    window.addEventListener("cartUpdated", fetchNavbarCartData);
+    return () => {
+      window.removeEventListener("cartUpdated", fetchNavbarCartData);
+    };
+  }, []);
 
   return (
     <header className="w-full block flex-none relative z-50">
@@ -39,26 +74,34 @@ const Navbar = () => {
                 className="w-4 h-4 object-contain"
               />
               <span>Regent Street, A4, A4201, London</span>
-              <button className="text-[#FC8A06] underline hover:opacity-80 transition-opacity cursor-pointer ml-1">
+              <button className="text-[#edc18f] underline hover:opacity-80 transition-opacity cursor-pointer ml-1">
                 Change Location
               </button>
             </div>
 
             {/* Figma Segmented Basket element */}
             <div className="flex items-center bg-[#028643] text-white font-sans h-full overflow-hidden shrink-0">
-              <div className="flex items-center justify-center px-5 h-full border-r border-white/20 bg-[#008543]">
+              <Link
+                to="/cart"
+                className="flex items-center justify-center px-5 h-full border-r border-white/20 bg-[#008543]"
+              >
                 <img
                   src={Images.BasketIcon}
                   alt="Basket"
                   className="w-5 h-5 object-contain brightness-0 invert"
                 />
-              </div>
+              </Link>
+
+              {/* Dynamic item count container */}
               <div className="flex items-center justify-center px-4 h-full font-semibold text-xs border-r border-white/20">
-                23 Items
+                {cartCount} {cartCount === 1 ? "Item" : "Items"}
               </div>
+
+              {/* Dynamic Total Price */}
               <div className="flex items-center justify-center px-4 h-full font-semibold text-xs border-r border-white/20">
-                GBP 79.89
+                GBP {cartTotal}
               </div>
+
               <button className="flex h-full px-4 items-center justify-center bg-[#016934] hover:bg-black/10 transition-colors cursor-pointer">
                 <img
                   src={Images.DownwardBtn}
@@ -83,7 +126,6 @@ const Navbar = () => {
           </Link>
 
           <nav className="flex items-center font-sans text-xs sm:text-sm font-semibold whitespace-nowrap">
-            {/* Pehle 3 links (Home, Browse Menu, Special Offers) */}
             {navLinks.slice(0, 3).map((link) => (
               <NavLink
                 key={link.label}
@@ -99,10 +141,8 @@ const Navbar = () => {
               </NavLink>
             ))}
 
-            {/* Beech mein Restaurant Dropdown */}
             <RestaurantDropdown isMobile={false} />
 
-            {/* Baqi bache hue links (Track Order wagera) */}
             {navLinks.slice(3).map((link) => (
               <NavLink
                 key={link.label}
@@ -143,12 +183,20 @@ const Navbar = () => {
       <div className="lg:hidden w-full bg-white border-b border-gray-200 font-sans">
         <div className="flex h-20 border-b border-gray-100">
           <div className="flex-1 flex items-center pl-4 sm:pl-6">
-            <Link to="/">
+            <Link
+              to="/cart"
+              className="bg-[#008543] text-white flex items-center justify-center gap-2.5 px-4 cursor-pointer"
+            >
               <img
-                src={Images.Logo}
-                alt="Order UK Logo"
-                className="w-[105px] h-auto object-contain"
+                src={Images.BasketIcon}
+                alt="Basket"
+                className="w-5 h-5 object-contain brightness-0 invert shrink-0"
               />
+              <span className="tracking-tight font-semibold">
+                {cartCount > 0
+                  ? `${cartCount} ${cartCount === 1 ? "Item" : "Items"} | GBP ${cartTotal}`
+                  : "Empty Cart"}
+              </span>
             </Link>
           </div>
           <div className="flex items-center justify-center pr-4">
@@ -181,14 +229,19 @@ const Navbar = () => {
             </div>
             <span className="tracking-tight">Login/Signup</span>
           </Link>
-          <div className="bg-[#008543] text-white flex items-center justify-center gap-2.5 px-4">
+
+          {/* ✅ Mobile bottom bar ko dynamic banaya */}
+          <Link
+            to="/cart"
+            className="bg-[#008543] text-white flex items-center justify-center gap-2.5 px-4 cursor-pointer"
+          >
             <img
               src={Images.BasketIcon}
               alt="Basket"
               className="w-5 h-5 object-contain brightness-0 invert shrink-0"
             />
-            <span className="tracking-tight">GBP 79.89</span>
-          </div>
+            <span className="tracking-tight">GBP {cartTotal}</span>
+          </Link>
         </div>
 
         <div className="flex items-center justify-end h-10 px-4 sm:px-6 bg-white text-brand-dark">
@@ -208,7 +261,6 @@ const Navbar = () => {
       {/* Mobile Menu Dropdown Wrapper */}
       {menuOpen && (
         <div className="lg:hidden w-full px-4 py-4 flex flex-col gap-4 bg-white border-b border-black/10 relative z-50">
-          {/* Pehle 3 Links */}
           {navLinks.slice(0, 3).map((link) => (
             <NavLink
               key={link.label}
@@ -225,13 +277,11 @@ const Navbar = () => {
             </NavLink>
           ))}
 
-          {/* Mobile Dropdown */}
           <RestaurantDropdown
             isMobile={true}
             closeMobileMenu={() => setMenuOpen(false)}
           />
 
-          {/* Baqi bache hue Links */}
           {navLinks.slice(3).map((link) => (
             <NavLink
               key={link.label}

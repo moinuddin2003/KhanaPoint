@@ -1,22 +1,14 @@
 import { useTheme } from "../../context/ThemeContext";
 
-const categories = [
-  "Offers",
-  "Burgers",
-  "Fries",
-  "Snacks",
-  "Salads",
-  "Cold drinks",
-  "Happy Meal®",
-  "Desserts",
-  "Hot drinks",
-  "Sauces",
-  "Orbit®",
-];
-
-function OfferCategoryTabs({ activeCategory, onSelect }) {
+// Ab hum 'categories' ko as a prop le rahe hain
+function OfferCategoryTabs({ activeCategory, onSelect, categories = [] }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  // Hamesha 'Offers' ko list ke shuru mein lazmi dikhane ke liye logic
+  const displayCategories = categories.includes("Offers")
+    ? categories
+    : ["Offers", ...categories];
 
   return (
     <div
@@ -37,10 +29,10 @@ function OfferCategoryTabs({ activeCategory, onSelect }) {
       `}</style>
 
       {/* min-w-max prevents the flex container from crushing the items on mobile.
-        lg:justify-between allows them to spread evenly on large screens. 
+         lg:justify-between allows them to spread evenly on large screens. 
       */}
       <div className="flex items-center justify-start lg:justify-between min-w-max gap-2 md:gap-4">
-        {categories.map((cat) => (
+        {displayCategories.map((cat) => (
           <button
             key={cat}
             onClick={() => onSelect(cat)}

@@ -17,7 +17,7 @@ export default function RestaurantHero() {
   useEffect(() => {
     if (rest_id) {
       setLoading(true);
-      fetch(`http://127.0.0.1:8000/restaurants/restaurant/${rest_id}`)
+      fetch(`${BASE_URL}restaurants/restaurant/${rest_id}`)
         .then((res) => {
           if (!res.ok)
             throw new Error("Restaurant data fetch karne mein masla hua");

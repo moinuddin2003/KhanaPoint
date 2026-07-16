@@ -60,7 +60,7 @@ const SignupForm = () => {
         localStorage.setItem("user", JSON.stringify(data.data));
         localStorage.setItem("accessToken", data.token.access);
         localStorage.setItem("refreshToken", data.token.refresh);
-        navigate("/");
+        navigate("/login");
       }
 
       // localStorage.setItem("user", JSON.stringify(formData));
@@ -227,10 +227,7 @@ const SignupForm = () => {
         {/* <span className="cursor-pointer font-semibold text-[#FC8A06] hover:underline">
           Sign In
         </span> */}
-        <Link
-          to="/"
-          className="font-semibold text-[#FC8A06] hover:underline"
-        >
+        <Link to="/" className="font-semibold text-[#FC8A06] hover:underline">
           Login
         </Link>
       </p>
