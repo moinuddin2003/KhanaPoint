@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Checkout from "../../Components/cart/Checkout";
 import { useNavigate } from "react-router";
-import { cartApi } from "../../services/authApi";
+import { cartApi } from "../../services/cartApi";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);

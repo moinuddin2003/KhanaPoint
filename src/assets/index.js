@@ -36,6 +36,7 @@ import deliveryIcon from "./RestaurantAssets/Tracking.png";
 import contactIcon from "./RestaurantAssets/ID Verified.png";
 import clockIcon from "./RestaurantAssets/Clock.png";
 import pinMarker from "./RestaurantAssets/Previous Location.png";
+import cart from "./RestaurantAssets/cart-16.png";
 
 import AboutPlaceOrder from "./order-food 1.png";
 import AboutTrack from "./AboutTrack.png";
@@ -98,6 +99,8 @@ export const Images = {
   ClockIcon: clockIcon,
   ContactIcon: contactIcon,
   DeliveryIcon: deliveryIcon,
+
+  Cart: cart,
 
   //Footer
   FooterUK: footerLogo,

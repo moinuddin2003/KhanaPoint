@@ -11,7 +11,8 @@ import Location from "../../Components/RestaurantDetail/Location";
 import Reviews from "../../Components/RestaurantDetail/Reviews";
 
 // Cart API ko import kiya
-import { cartApi, BASE_URL } from "../../services/authApi";
+import { BASE_URL } from "../../services/authApi";
+import { cartApi } from "../../services/cartApi";
 
 export default function RestaurantDetail() {
   const { rest_id } = useParams(); // URL se restaurant ki dynamic ID

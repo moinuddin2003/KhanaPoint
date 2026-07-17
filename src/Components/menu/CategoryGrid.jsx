@@ -4,15 +4,6 @@ import { getMenuItems } from "../../services/restaurantAPI";
 import { BASE_URL } from "../../services/authApi";
 import { useNavigate } from "react-router";
 
-// const categoriesData = [
-//   { id: 1, image: "/src/assets/category1.png", name: "Category 1", restaurantCount: "5 Restaurants" },
-//   { id: 2, image: "/src/assets/category2.png", name: "Category 2", restaurantCount: "12 Restaurants" },
-//   { id: 3, image: "/src/assets/category3.png", name: "Category 3", restaurantCount: "8 Restaurants" },
-//   { id: 4, image: "/src/assets/category4.png", name: "Category 1", restaurantCount: "5 Restaurants" },
-//   { id: 5, image: "/src/assets/category5.png", name: "Category 2", restaurantCount: "12 Restaurants" },
-//   { id: 6, image: "/src/assets/category6.png", name: "Category 3", restaurantCount: "8 Restaurants" },
-// ];
-
 function CategoryGrid() {
   const [menuItems, setMenuItems] = useState([]);
   const navigate = useNavigate();
@@ -21,22 +12,34 @@ function CategoryGrid() {
     const fetchMenuItems = async () => {
       try {
         const data = await getMenuItems();
-        // console.log(Array.isArray(data)); // true or false
-        console.log(data);
-        setMenuItems(data);
+        // Agar data backend se { data: [...] } structure mein aa raha hai toh usay handle karein
+        const itemsList = Array.isArray(data) ? data : data?.data || [];
+        setMenuItems(itemsList);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching menu items:", error);
       }
     };
     fetchMenuItems();
   }, []);
 
-  const validMenuItems = menuItems.filter((item) => item.category);
+  const validMenuItems = menuItems.filter((item) => item.category && item.restaurant);
 
+  // Sirf unique categories nikalne ke liye
   const uniqueCategories = validMenuItems.filter(
     (item, index, self) =>
       index === self.findIndex((i) => i.category.id === item.category.id),
   );
+
+  // 🔥 Helper function jo sahi se unique restaurant count nikalega
+  const getUniqueRestaurantCount = (categoryId) => {
+    const matchingRestaurants = validMenuItems
+      .filter((item) => item.category.id === categoryId)
+      .map((item) => item.restaurant.id);
+
+    // Set duplicate IDs ko automatic remove kar deta hai
+    const uniqueCount = new Set(matchingRestaurants).size;
+    return `${uniqueCount} Restaurant${uniqueCount !== 1 ? "s" : ""}`;
+  };
 
   return (
     <section className="px-6 py-8">
@@ -49,7 +52,7 @@ function CategoryGrid() {
             key={menuItem.category.id}
             image={`${BASE_URL}${menuItem.image}`}
             name={menuItem.category.name}
-            restaurantCount={`${validMenuItems.filter((item) => item.category.id === menuItem.category.id).length} Restaurants`}
+            restaurantCount={getUniqueRestaurantCount(menuItem.category.id)}
             onClick={() => navigate(`/category/${menuItem.category.id}`)}
           />
         ))}

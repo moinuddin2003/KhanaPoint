@@ -9,14 +9,20 @@ import Signup from "../Pages/auth/Signup";
 import DashboardHome from "../Pages/admin/DashboardHome";
 import AdminRoute from "./AdminRoute";
 import Layout from "../Components/layout/Layout";
+import CategoryPage from "../Components/menu/CategoryDetailPage";
+import DealDetailPage from "../Components/menu/DealDetailPage";
+import ScrollToTop from "../Components/common/ScrollToTop";
 // import RestaurantDetail from "../Pages/customer/RestaurantDetaill/";
 const AppRoutes = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/deal/:dealId" element={<DealDetailPage />} />
           <Route path="/restaurants/:rest_id" element={<RestaurantDetail />} />
+          <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/cart" element={<Cart />} />
         </Route>
 

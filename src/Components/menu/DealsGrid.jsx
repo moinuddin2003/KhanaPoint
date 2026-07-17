@@ -1,32 +1,42 @@
 // components/menu/DealsGrid.jsx
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DealCard from "./DealCard";
 import { BASE_URL } from "../../services/authApi";
-import { getDealCategories, getDeals } from "../../services/restaurantAPI";
+// Humne getDealItems (all-deal-item) ko bhi import kar liya
+import {
+  getDealCategories,
+  getDeals,
+  getDealItems,
+} from "../../services/restaurantAPI";
 
 function DealsGrid() {
+  // <--- Yahan se 'onDealClick' prop hata diya
+  const navigate = useNavigate(); // <--- Navigation hook lagaya
   const [activeTab, setActiveTab] = useState("all");
   const [deals, setDeals] = useState([]);
+  const [dealItems, setDealItems] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [dealsResponse, categoriesResponse] = await Promise.all([
-          getDeals(),
-          getDealCategories(),
-        ]);
+        // Teenon APIs ko parallel call kar rahe hain
+        const [dealsResponse, dealItemsResponse, categoriesResponse] =
+          await Promise.all([getDeals(), getDealItems(), getDealCategories()]);
 
-        // Bilkul safe tarike se data extract karna:
-        // Agar response ke andar .data hai toh wo le, warna direct response ko use kare
         const rawDeals =
           dealsResponse?.data ||
           (Array.isArray(dealsResponse) ? dealsResponse : []);
+        const rawDealItems =
+          dealItemsResponse?.data ||
+          (Array.isArray(dealItemsResponse) ? dealItemsResponse : []);
         const rawCategories =
           categoriesResponse?.data ||
           (Array.isArray(categoriesResponse) ? categoriesResponse : []);
 
         setDeals(rawDeals);
+        setDealItems(rawDealItems);
         setCategories(rawCategories);
       } catch (error) {
         console.error("Data fetch karne mein masla hua:", error);
@@ -36,17 +46,57 @@ function DealsGrid() {
     fetchData();
   }, []);
 
-  // Tabs ki list banana ("All" ko shuru mein add kar ke)
   const tabs = [{ id: "all", name: "All" }, ...categories];
 
-  // Deals ko filter karne ki seedhi logic
-  const filteredDeals =
-    activeTab === "all"
-      ? deals
-      : deals.filter((deal) => {
-          const firstItemCategoryId = deal?.items?.[0]?.menu_item?.category?.id;
-          return firstItemCategoryId === Number(activeTab);
-        });
+  // ==========================================
+  // RENDER LOGIC (Code saf aur readable rakhne ke liye)
+  // ==========================================
+
+  // 1. Render function jab "All" tab active ho (Pure Deal Cards show honge)
+  const renderAllDeals = (isMobile = false) => {
+    return deals.map((deal) => (
+      <DealCard
+        key={deal.id}
+        image={`${BASE_URL}${deal.image}`}
+        name={deal.name}
+        restaurantLabel={
+          deal.items?.[0]?.menu_item?.restaurant?.name || "Unknown Restaurant"
+        }
+        discount={`$${deal.combo_price}`}
+        compact={isMobile}
+        onClick={() => navigate(`/deal/${deal.id}`)} // <--- Navigation direct id ke sath!
+      />
+    ));
+  };
+
+  // 2. Render function - Category Items
+  const renderCategoryItems = (isMobile = false) => {
+    const filteredItems = dealItems.filter(
+      (item) => item?.menu_item?.category?.id === Number(activeTab),
+    );
+
+    if (filteredItems.length === 0) {
+      return (
+        <p className="text-sm text-gray-500 py-4">
+          No items available for this category yet.
+        </p>
+      );
+    }
+
+    return filteredItems.map((item) => (
+      <DealCard
+        key={item.id}
+        image={`${BASE_URL}${item.menu_item.image}`}
+        name={item.menu_item.name}
+        restaurantLabel={
+          item.menu_item.restaurant?.name || "Unknown Restaurant"
+        }
+        discount={`$${item.menu_item.price}`}
+        compact={isMobile}
+        onClick={() => navigate(`/deal/${item.deal_id}`)} // <--- Navigation jis deal ka part he uski id par!
+      />
+    ));
+  };
 
   return (
     <section className="px-6 py-8">
@@ -86,46 +136,22 @@ function DealsGrid() {
         </nav>
       </div>
 
-      {filteredDeals.length === 0 ? (
-        <p className="text-sm text-gray-500">
-          No deals available for this category yet.
-        </p>
-      ) : (
-        <>
-          {/* Mobile: horizontal sliding row */}
-          <div className="flex lg:hidden gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2">
-            {filteredDeals.map((deal) => (
-              <DealCard
-                key={deal.id}
-                image={`${BASE_URL}${deal.image}`}
-                name={deal.name}
-                restaurantLabel={
-                  deal.items?.[0]?.menu_item?.restaurant?.name ||
-                  "Unknown Restaurant"
-                }
-                discount={deal.combo_price}
-                compact
-              />
-            ))}
-          </div>
+      {/* RENDER BODY */}
+      <div>
+        {/* Mobile View: sliding row */}
+        <div className="flex lg:hidden gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2">
+          {activeTab === "all"
+            ? renderAllDeals(true)
+            : renderCategoryItems(true)}
+        </div>
 
-          {/* Desktop: 3-column grid */}
-          <div className="hidden lg:grid grid-cols-3 gap-5">
-            {filteredDeals.map((deal) => (
-              <DealCard
-                key={deal.id}
-                image={`${BASE_URL}${deal.image}`}
-                name={deal.name}
-                restaurantLabel={
-                  deal.items?.[0]?.menu_item?.restaurant?.name ||
-                  "Unknown Restaurant"
-                }
-                discount={`$${deal.combo_price}`}
-              />
-            ))}
-          </div>
-        </>
-      )}
+        {/* Desktop View: 3-column grid */}
+        <div className="hidden lg:grid grid-cols-3 gap-5">
+          {activeTab === "all"
+            ? renderAllDeals(false)
+            : renderCategoryItems(false)}
+        </div>
+      </div>
     </section>
   );
 }

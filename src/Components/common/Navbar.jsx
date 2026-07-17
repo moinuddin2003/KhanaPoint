@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import RestaurantDropdown from "./RestaurantDropdown";
-import { cartApi } from "../../services/authApi";
+import { cartApi } from "../../services/cartApi";
 
 const navLinks = [
   { label: "Home", path: "/Home" },

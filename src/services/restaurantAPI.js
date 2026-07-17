@@ -35,6 +35,17 @@ export const getDeals = async () => {
   return data.data;
 };
 
+export const getDealItems = async () => {
+  const response = await fetch(`${BASE_URL}restaurants/all-deal-item`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch deals");
+  }
+
+  const data = await response.json();
+  return data.data;
+};
+
 export const getDealCategories = async () => {
   const response = await fetch(`${BASE_URL}restaurants/all-category`);
 
