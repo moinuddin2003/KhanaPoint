@@ -1,258 +1,122 @@
-import React, { useState, useEffect } from "react";
-import {
-  LayoutDashboard,
-  ShoppingCart,
-  RefreshCw,
-  AlertCircle,
-  Store,
-} from "lucide-react";
-import Analytics from "./Analytics";
-import ManageOrders from "./ManageOrders";
-import ManageCatalog from "./ManageCatalog";
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
+import { analyticsApi } from "../../services/adminApi";
+import Loader from "../../Components/common/Loader";
+import { Package, DollarSign, Store, Users, ArrowRight } from "lucide-react";
 
-import { BASE_URL } from "../../services/authApi";
-
-const TABS = [
-  { key: "analytics", label: "Analytics Overview", icon: LayoutDashboard },
-  { key: "orders", label: "Manage Orders", icon: ShoppingCart },
-  { key: "catalog", label: "Restaurants", icon: Store },
-];
-
-const TAB_COPY = {
-  analytics: {
-    title: "Dashboard Analytics",
-    subtitle: "Check restaurant trends, system metrics, and total summaries.",
-  },
-  orders: {
-    title: "Order Management",
-    subtitle: "Control, verify, and filter customer orders in real-time.",
-  },
-  catalog: {
-    title: "Restaurants & Menu",
-    subtitle: "Browse restaurants, categories, menu items, and active deals.",
-  },
+const STATUS_COLORS = {
+  pending: "bg-yellow-100 text-yellow-700",
+  accepted: "bg-blue-100 text-blue-700",
+  preparing: "bg-orange-100 text-orange-700",
+  out_for_delivery: "bg-purple-100 text-purple-700",
+  delivered: "bg-green-100 text-green-700",
+  cancelled: "bg-red-100 text-red-700",
 };
 
-export default function DashboardHome() {
-  const [activeTab, setActiveTab] = useState("analytics");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const StatCard = ({ icon: Icon, label, value, color }) => (
+  <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex items-center gap-4">
+    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
+      <Icon className="w-6 h-6 text-white" />
+    </div>
+    <div className="min-w-0">
+      <p className="text-xs font-medium text-gray-500 truncate">{label}</p>
+      <p className="text-2xl font-bold text-brand-dark truncate">{value}</p>
+    </div>
+  </div>
+);
 
-  // Core Data States
+const DashboardHome = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  // Matches AdminOverviewView exactly: { total_orders, total_revenue, active_restaurants, total_users }
   const [overview, setOverview] = useState({
     total_orders: 0,
     total_revenue: 0,
     active_restaurants: 0,
     total_users: 0,
   });
+  // Matches AdminOrdersByStatusView exactly: [{ current_status, count }]
   const [ordersByStatus, setOrdersByStatus] = useState([]);
-  const [popularDeals, setPopularDeals] = useState([]);
-  const [popularItems, setPopularItems] = useState([]);
-  const [revenueByRestaurant, setRevenueByRestaurant] = useState([]);
-  const [revenueOverTime, setRevenueOverTime] = useState([]);
-  const [orders, setOrders] = useState([]);
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token =
-        localStorage.getItem("accessToken") ||
-        sessionStorage.getItem("accessToken");
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
-      };
-
-      // NOTE: BASE_URL already ends in "/" — never prefix these paths with "/"
-      const [
-        resOverview,
-        resStatus,
-        resDeals,
-        resItems,
-        resRevRestaurant,
-        resRevTime,
-        resOrders,
-      ] = await Promise.all([
-        fetch(`${BASE_URL}order/admin/analytics/overview/`, { headers }),
-        fetch(`${BASE_URL}order/admin/analytics/orders-by-status/`, {
-          headers,
-        }),
-        fetch(`${BASE_URL}order/admin/analytics/popular-deals/`, { headers }),
-        fetch(`${BASE_URL}order/admin/analytics/popular-items/`, { headers }),
-        fetch(`${BASE_URL}order/admin/analytics/revenue-by-restaurant/`, {
-          headers,
-        }),
-        fetch(`${BASE_URL}order/admin/analytics/revenue-over-time/`, {
-          headers,
-        }),
-        fetch(`${BASE_URL}order/admin/orders`, { headers }),
-      ]);
-
-      if (resOverview.status === 401 || resOrders.status === 401) {
-        setError("Unauthorized access. Please login as an admin.");
-        return;
-      }
-      if (!resOverview.ok || !resStatus.ok || !resOrders.ok) {
-        throw new Error("Server responded with an error status.");
-      }
-
-      const [
-        dataOverview,
-        dataStatus,
-        dataDeals,
-        dataItems,
-        dataRevRestaurant,
-        dataRevTime,
-        dataOrders,
-      ] = await Promise.all([
-        resOverview.json(),
-        resStatus.json(),
-        resDeals.ok ? resDeals.json() : [],
-        resItems.ok ? resItems.json() : [],
-        resRevRestaurant.ok ? resRevRestaurant.json() : [],
-        resRevTime.ok ? resRevTime.json() : [],
-        resOrders.json(),
-      ]);
-
-      setOverview(dataOverview.data || dataOverview);
-      setOrdersByStatus(dataStatus.data || dataStatus);
-      setPopularDeals(dataDeals.data || dataDeals);
-      setPopularItems(dataItems.data || dataItems);
-      setRevenueByRestaurant(dataRevRestaurant.data || dataRevRestaurant);
-      setRevenueOverTime(dataRevTime.data || dataRevTime);
-      setOrders(dataOrders.data || dataOrders);
-    } catch (err) {
-      console.error("Dashboard Fetch Error: ", err);
-      setError(
-        "Failed to fetch admin dashboard records. Please check your network connection.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [ov, obs] = await Promise.all([
+          analyticsApi.overview(),
+          analyticsApi.ordersByStatus(),
+        ]);
+        setOverview(ov?.data || {});
+        setOrdersByStatus(obs?.data || []);
+      } catch (err) {
+        setError(err.message || "Failed to load dashboard data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-600 border-t-transparent"></div>
-        <p className="mt-4 text-slate-600 font-medium text-sm">
-          Loading Live Dashboard Records...
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <Loader fullPage label="Loading dashboard..." />;
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
-        <AlertCircle className="h-14 w-14 text-red-500 mb-3" />
-        <p className="text-base font-semibold text-slate-800 text-center">
-          {error}
-        </p>
-        <button
-          onClick={fetchData}
-          className="mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition"
-        >
-          Try Reloading
-        </button>
+      <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm">
+        {error}
       </div>
     );
   }
 
-  const copy = TAB_COPY[activeTab];
-
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-800">
-      {/* Sidebar navigation */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between">
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg">
-              A
-            </div>
-            <span className="font-bold text-lg text-slate-900 tracking-tight">
-              FoodAdmin
-            </span>
-          </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-brand-dark">Dashboard</h1>
+        <p className="text-sm text-gray-500 mt-1">Quick overview of your platform.</p>
+      </div>
 
-          <nav className="space-y-1">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.key;
-              return (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
-                    isActive
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={Package} label="Total Orders" value={overview.total_orders} color="bg-brand-orange" />
+        <StatCard
+          icon={DollarSign}
+          label="Total Revenue"
+          value={`£${overview.total_revenue}`}
+          color="bg-brand-green"
+        />
+        <StatCard icon={Store} label="Active Restaurants" value={overview.active_restaurants} color="bg-blue-500" />
+        <StatCard icon={Users} label="Users" value={overview.total_users} color="bg-purple-500" />
+      </div>
 
-        <div className="p-4 border-t border-slate-100">
-          <div className="bg-slate-50 p-3 rounded-lg flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-xs text-slate-600">
-              AD
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-800">
-                Main Administrator
-              </p>
-              <p className="text-[10px] text-emerald-600 font-semibold uppercase">
-                Active Session
-              </p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Page Content View */}
-      <main className="flex-1 p-8 overflow-y-auto">
-        <header className="flex justify-between items-center mb-8 border-b border-slate-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              {copy.title}
-            </h1>
-            <p className="text-slate-500 text-xs mt-1">{copy.subtitle}</p>
-          </div>
-          <button
-            onClick={fetchData}
-            className="flex items-center gap-2 px-3.5 py-2 border border-slate-300 rounded-lg bg-white shadow-sm hover:bg-slate-50 transition text-xs font-bold text-slate-700"
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-bold text-brand-dark">Orders by Status</h3>
+          <Link
+            to="/admin/analytics"
+            className="flex items-center gap-1 text-xs font-semibold text-brand-orange hover:underline"
           >
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh Data
-          </button>
-        </header>
+            View full analytics <ArrowRight size={13} />
+          </Link>
+        </div>
 
-        {activeTab === "analytics" && (
-          <Analytics
-            overview={overview}
-            ordersByStatus={ordersByStatus}
-            popularDeals={popularDeals}
-            popularItems={popularItems}
-            revenueByRestaurant={revenueByRestaurant}
-            revenueOverTime={revenueOverTime}
-          />
+        {ordersByStatus.length === 0 ? (
+          <p className="text-sm text-gray-400">No orders yet.</p>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            {ordersByStatus.map((row) => (
+              <div
+                key={row.current_status}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold capitalize ${
+                  STATUS_COLORS[row.current_status] || "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {row.current_status.replaceAll("_", " ")} — {row.count}
+              </div>
+            ))}
+          </div>
         )}
-
-        {activeTab === "orders" && (
-          <ManageOrders initialOrders={orders} apiBaseUrl={BASE_URL} />
-        )}
-
-        {activeTab === "catalog" && <ManageCatalog />}
-      </main>
+      </div>
     </div>
   );
-}
+};
+
+export default DashboardHome;

@@ -6,13 +6,23 @@ import Checkout from "../Components/cart/Checkout";
 import Cart from "../Pages/customer/Cart";
 import Login from "../Pages/auth/Login";
 import Signup from "../Pages/auth/Signup";
-import DashboardHome from "../Pages/admin/DashboardHome";
 import AdminRoute from "./AdminRoute";
 import Layout from "../Components/layout/Layout";
 import CategoryPage from "../Components/menu/CategoryDetailPage";
 import DealDetailPage from "../Components/menu/DealDetailPage";
 import ScrollToTop from "../Components/common/ScrollToTop";
-// import RestaurantDetail from "../Pages/customer/RestaurantDetaill/";
+
+// Admin pages
+import AdminLayout from "../Pages/admin/AdminLayout";
+import DashboardHome from "../Pages/admin/DashboardHome";
+import Analytics from "../Pages/admin/Analytics";
+import Orders from "../Pages/admin/Orders";
+import Restaurants from "../Pages/admin/Restaurants";
+import Categories from "../Pages/admin/Categories";
+import MenuItems from "../Pages/admin/MenuItems";
+import Deals from "../Pages/admin/Deals";
+import DealItems from "../Pages/admin/DealItems";
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -29,15 +39,25 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Admin Section Routes */}
+        {/* Admin Section — everything under /admin renders inside AdminLayout's
+            sidebar/topbar shell via <Outlet />, and is guarded by AdminRoute. */}
         <Route
           path="/admin"
           element={
             <AdminRoute>
-              <DashboardHome />
+              <AdminLayout />
             </AdminRoute>
           }
-        />
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="restaurants" element={<Restaurants />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="menu-items" element={<MenuItems />} />
+          <Route path="deals" element={<Deals />} />
+          <Route path="deal-items" element={<DealItems />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
