@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { categoriesApi } from "../../services/adminApi";
 import Loader from "../../Components/common/Loader";
@@ -61,10 +62,11 @@ const Categories = () => {
       } else {
         await categoriesApi.create(form);
       }
+      toast.success(editingId ? "Category updated" : "Category created");
       setModalOpen(false);
       fetchCategories();
     } catch (err) {
-      alert(err.message || "Failed to save category");
+      toast.error(err.message || "Failed to save category");
     } finally {
       setSaving(false);
     }
@@ -75,8 +77,9 @@ const Categories = () => {
     try {
       await categoriesApi.remove(category.id);
       setCategories((prev) => prev.filter((c) => c.id !== category.id));
+      toast.success("Category deleted");
     } catch (err) {
-      alert(err.message || "Failed to delete category");
+      toast.error(err.message || "Failed to delete category");
     }
   };
 

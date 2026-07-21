@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useEffect, useState, Fragment } from "react";
 import { ordersApi } from "../../services/adminApi";
 import Loader from "../../Components/common/Loader";
@@ -48,8 +49,9 @@ const Orders = () => {
       setOrders((prev) =>
         prev.map((o) => (o.order_id === orderId ? { ...o, current_status: newStatus } : o))
       );
+      toast.success(`Order #${orderId} status updated to "${newStatus.replaceAll("_", " ")}"`);
     } catch (err) {
-      alert(err.message || "Failed to update status");
+      toast.error(err.message || "Failed to update status");
     } finally {
       setUpdatingId(null);
     }

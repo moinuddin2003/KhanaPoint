@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router"; // URL se dynamic ID nikalne ke liye
-
+import { toast } from "react-toastify";
 import Card from "../../Components/RestaurantDetail/Card";
 import DiscountCards from "../../Components/RestaurantDetail/DiscountCards";
 import RestaurantGrid from "../../Components/menu/RestaurantGrid";
@@ -70,11 +70,13 @@ export default function RestaurantDetail() {
         await cartApi.addToCart(item.id);
       }
 
-      window.alert(`"${item.name}" has been added to your cart! 🛒`);
+      toast.success(`"${item.name}" added to your cart! 🛒`);
       window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       console.error("Error adding item to server cart:", error);
-      window.alert("Failed to add item to cart. Please try again.");
+      toast.error(
+        error.message || "Failed to add item to cart. Please try again.",
+      );
     } finally {
       setCartAddingId(null);
     }
@@ -132,9 +134,7 @@ export default function RestaurantDetail() {
 
   // 4. API Response se sirf iss restaurant ki deals nikalna (Safe check for restaurant items)
   const restaurantDeals = allDeals.filter((deal) => {
-    return deal.items?.some(
-      (item) => Number(item.menu_item?.restaurant?.id) === Number(rest_id),
-    );
+    return Number(deal.restaurant_id) === Number(rest_id);
   });
 
   // Safe Image URL helper function

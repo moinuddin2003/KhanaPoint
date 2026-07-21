@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Link, replace, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { registerUser } from "../../services/authApi";
+
+import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +18,7 @@ const SignupForm = () => {
     country: "",
   });
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -36,11 +40,12 @@ const SignupForm = () => {
       !formData.city ||
       !formData.username
     ) {
-      alert("Required Fields Must be Filled");
+      toast.error("Please fill all required fields");
+      return;
     }
 
     if (formData.password !== formData.confirm_password) {
-      alert("Password and confirm password do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -50,27 +55,22 @@ const SignupForm = () => {
       console.log(data);
 
       if (data.error) {
-        alert("User with this email already exists");
+        toast.error("A user with this email already exists");
         return;
       }
 
       if (data?.message) {
-        alert(data.message);
-
-        localStorage.setItem("user", JSON.stringify(data.data));
-        localStorage.setItem("accessToken", data.token.access);
-        localStorage.setItem("refreshToken", data.token.refresh);
-        navigate("/login");
+        toast.success(data.message);
+        login(data.data, data.token, true); // logs them straight in after signup
+        navigate(data.data?.is_admin ? "/admin" : "/home");
       }
-
-      // localStorage.setItem("user", JSON.stringify(formData));
 
       console.log(formData);
 
       // setLoading(false);
     } catch (error) {
       console.error(error);
-      alert("Something Went Wrong");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -142,7 +142,7 @@ const SignupForm = () => {
             type="button"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FC8A06]"
           >
-            {showPassword ? <FiEye /> : <FiEyeOff />}
+            {showPassword ? <FiEyeOff /> : <FiEye />}
           </button>
         </div>
       </div>
@@ -168,7 +168,7 @@ const SignupForm = () => {
             type="button"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FC8A06]"
           >
-            {showConfirmPassword ? <FiEye /> : <FiEyeOff />}
+            {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
           </button>
         </div>
       </div>

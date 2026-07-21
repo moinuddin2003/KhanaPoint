@@ -22,11 +22,13 @@ import Categories from "../Pages/admin/Categories";
 import MenuItems from "../Pages/admin/MenuItems";
 import Deals from "../Pages/admin/Deals";
 import DealItems from "../Pages/admin/DealItems";
+import ScrollToHash from "../Components/common/ScrollToHash";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <ScrollToHash />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/home" element={<Home />} />

@@ -5,40 +5,12 @@ import { useTheme } from "../../context/ThemeContext";
 import { Images } from "../../assets";
 import { BASE_URL } from "../../services/authApi"; // Agar BASE_URL defined hai backend domain ke liye
 
-export default function RestaurantHero() {
+export default function RestaurantHero({ data }) {
   const { rest_id } = useParams(); // URL se dynamic ID li
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const [restaurant, setRestaurant] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // API se single restaurant ka data load karna
-  useEffect(() => {
-    if (rest_id) {
-      setLoading(true);
-      fetch(`${BASE_URL}restaurants/restaurant/${rest_id}`)
-        .then((res) => {
-          if (!res.ok)
-            throw new Error("Restaurant data fetch karne mein masla hua");
-          return res.json();
-        })
-        .then((resData) => {
-          setRestaurant(resData?.data || null);
-        })
-        .catch((err) => console.error("Hero API Error:", err))
-        .finally(() => setLoading(false));
-    }
-  }, [rest_id]);
-
-  // Loading State (Skeleton)
-  if (loading) {
-    return (
-      <section className="px-4 sm:px-6 md:px-10 lg:px-8 xl:px-20 py-6 sm:py-10 animate-pulse">
-        <div className="h-[380px] xl:h-[420px] bg-gray-200 dark:bg-gray-800 rounded-2xl w-full"></div>
-      </section>
-    );
-  }
+  const restaurant = data;
 
   // Agar restaurant ka data kisi wajah se na mile
   if (!restaurant) {
@@ -49,10 +21,9 @@ export default function RestaurantHero() {
     );
   }
 
-  // Base URL fallback handle karne ke liye (agar image string lagani ho)
-  const restaurantImage = restaurant.image.startsWith("http")
-    ? restaurant.image
-    : `http://127.0.0.1:8000${restaurant.image}`;
+  const restaurantImage = restaurant.image
+    ? restaurant.image // already a full URL — RestaurantDetail's getFullImageUrl() already built this
+    : Images.PlaceholderRestaurant; // use whatever fallback image you have, or "" if none
 
   return (
     <section className="px-4 sm:px-6 md:px-10 lg:px-8 xl:px-20 py-6 sm:py-10">

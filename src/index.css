@@ -1,6 +1,24 @@
 @import "tailwindcss";
 
+/*
+  Tailwind v4 reads colors from this @theme block and turns each
+  --color-X into real utility classes: bg-X, text-X, border-X, ring-X etc.
+  This is why `bg-brand-orange` etc. wasn't working before — this block
+  didn't exist, so Tailwind had no idea what "brand-orange" meant.
 
+  Pulled these exact hex values from your existing Navbar.jsx / LoginForm.jsx
+  so nothing changes visually — this just makes the classes actually work.
+*/
 @theme {
-  --color-brand-orange: #f97316;
+  --color-brand-orange: #fc8a06;
+  --color-brand-orange-dark: #e97b05;
+  --color-brand-dark: #03081f;
+  --color-brand-green: #008543;
+  --color-brand-green-dark: #016934;
+  --color-brand-green-light: #028643;
+  --color-brand-bg: #fbfbfb;
 }
+
+/* Enables the `dark:` variant to be toggled by adding class="dark" to <html>,
+   which is exactly what your ThemeContext already does. */
+@custom-variant dark (&:where(.dark, .dark *));

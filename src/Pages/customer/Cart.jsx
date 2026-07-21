@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Checkout from "../../Components/cart/Checkout";
 import { useNavigate } from "react-router";
 import { cartApi } from "../../services/cartApi";
+import { toast } from "react-toastify";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -38,14 +39,12 @@ export default function Cart() {
     if (!item) return;
     try {
       const newQuantity = item.quantity + 1;
-      setCartItems((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, quantity: newQuantity } : i)),
-      );
+
       await cartApi.updateItemQuantity(id, newQuantity);
       fetchCartData();
     } catch (err) {
       console.error(err);
-      fetchCartData();
+      toast.error("Failed to update quantity");
     }
   };
 
@@ -63,7 +62,7 @@ export default function Cart() {
         fetchCartData();
       } catch (err) {
         console.error(err);
-        fetchCartData();
+        toast.error("Failed to update quantity");
       }
     } else {
       const isConfirmed = window.confirm(
@@ -72,7 +71,6 @@ export default function Cart() {
       if (!isConfirmed) return;
 
       try {
-        setCartItems((prev) => prev.filter((i) => i.id !== id));
         await cartApi.deleteItem(id);
         fetchCartData();
       } catch (err) {
@@ -91,12 +89,12 @@ export default function Cart() {
       };
 
       if (!payload.delivery_address.trim()) {
-        alert("Please provide a valid delivery address.");
+        toast.error("Please provide a valid delivery address.");
         return;
       }
 
       await cartApi.checkout(payload);
-
+      toast.success("Order placed successfully! 🎉");
       // 2. Order success state ko true karein
       setIsOrderPlaced(true);
 
@@ -104,7 +102,7 @@ export default function Cart() {
       setCartItems([]);
       setTotalPrice(0);
     } catch (err) {
-      alert("Checkout failed: " + err.message);
+      toast.error("Checkout failed: " + err.message);
     }
   };
 

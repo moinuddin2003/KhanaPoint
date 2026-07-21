@@ -23,14 +23,15 @@ export default function Home() {
     <div className="">
       {/* // mx-auto max-w-7xl space-y-6 p-6 */}
 
-
       <HeroBanner />
 
-      <div id="menu">
+      <div id="deals">
         <DealsGrid />
-        <CategoryGrid />
-        <RestaurantGrid type="Popular" />
       </div>
+      <div id="menu">
+        <CategoryGrid />
+      </div>
+      <RestaurantGrid type="Popular" />
       <DownloadBanner />
 
       <GetStarted

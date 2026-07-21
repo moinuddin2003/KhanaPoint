@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { dealsApi, restaurantsApi } from "../../services/adminApi";
 import { BASE_URL } from "../../services/authApi";
@@ -89,10 +90,11 @@ const Deals = () => {
       } else {
         await dealsApi.create(form);
       }
+      toast.success(editingId ? "Deal updated" : "Deal created");
       setModalOpen(false);
       fetchAll();
     } catch (err) {
-      alert(err.message || "Failed to save deal");
+      toast.error(err.message || "Failed to save deal");
     } finally {
       setSaving(false);
     }
@@ -103,8 +105,9 @@ const Deals = () => {
     try {
       await dealsApi.remove(deal.id);
       setDeals((prev) => prev.filter((d) => d.id !== deal.id));
+      toast.success("Deal deleted");
     } catch (err) {
-      alert(err.message || "Failed to delete deal");
+      toast.error(err.message || "Failed to delete deal");
     }
   };
 

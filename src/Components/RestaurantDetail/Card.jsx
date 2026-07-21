@@ -21,7 +21,7 @@ const Card = ({ data, onBtnClick }) => {
           </div>
 
           <p className="text-[18px] font-bold text-[#03081F] mt-3">
-            {data.price ? `$${data.price}` : "N/A"}
+            {data.price ? `£${data.price}` : "N/A"}
           </p>
         </div>
 

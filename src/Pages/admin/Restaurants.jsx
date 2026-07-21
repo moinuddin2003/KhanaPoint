@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { restaurantsApi } from "../../services/adminApi";
 import { BASE_URL } from "../../services/authApi";
@@ -93,10 +94,11 @@ const Restaurants = () => {
       } else {
         await restaurantsApi.create(form);
       }
+      toast.success(editingId ? "Restaurant updated" : "Restaurant created");
       setModalOpen(false);
       fetchRestaurants();
     } catch (err) {
-      alert(err.message || "Failed to save restaurant");
+      toast.error(err.message || "Failed to save restaurant");
     } finally {
       setSaving(false);
     }
@@ -107,8 +109,9 @@ const Restaurants = () => {
     try {
       await restaurantsApi.remove(restaurant.id);
       setRestaurants((prev) => prev.filter((r) => r.id !== restaurant.id));
+      toast.success("Restaurant deleted");
     } catch (err) {
-      alert(err.message || "Failed to delete restaurant");
+      toast.error(err.message || "Failed to delete restaurant");
     }
   };
 

@@ -1,6 +1,6 @@
 // components/menu/DealsGrid.jsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import DealCard from "./DealCard";
 import { BASE_URL } from "../../services/authApi";
 // Humne getDealItems (all-deal-item) ko bhi import kar liya
@@ -100,8 +100,8 @@ function DealsGrid() {
 
   return (
     <section className="px-6 py-8">
-      <div className="flex items-center">
-        <h2 className="text-xl md:text-2xl font-bold mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <h2 className="text-xl md:text-2xl font-bold">
           Up to -40% 🎊 Order.uk exclusive deals
         </h2>
 
@@ -109,7 +109,7 @@ function DealsGrid() {
         <select
           value={activeTab}
           onChange={(e) => setActiveTab(e.target.value)}
-          className="lg:hidden ml-auto mb-4 border border-orange-500 rounded-full px-4 py-2 text-sm font-medium text-black bg-white"
+          className="lg:hidden border border-orange-500 rounded-full px-4 py-2 text-sm font-medium text-black bg-white dark:bg-brand-dark dark:text-white"
         >
           {tabs.map((tab) => (
             <option key={tab.id} value={tab.id}>
@@ -119,15 +119,15 @@ function DealsGrid() {
         </select>
 
         {/* Desktop: scrollable tabs */}
-        <nav className="hidden lg:flex overflow-x-auto scrollbar-hide gap-2 mb-4 ml-auto max-w-[60%] pb-1 scroll-smooth">
+        <nav className="hidden lg:flex overflow-x-auto scrollbar-hide gap-2 max-w-[60%] pb-1 scroll-smooth">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-5 py-2 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer flex-shrink-0 ${
                 activeTab === tab.id
-                  ? "border border-orange-500 bg-white font-bold text-black"
-                  : "border border-transparent font-medium text-gray-700 hover:bg-black/5 hover:text-black"
+                  ? "border border-orange-500 bg-white dark:bg-brand-dark font-bold text-black dark:text-white"
+                  : "border border-transparent font-medium text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 hover:text-black dark:hover:text-white"
               }`}
             >
               {tab.name}

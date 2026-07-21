@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { menuItemsApi, restaurantsApi, categoriesApi } from "../../services/adminApi";
 import { BASE_URL } from "../../services/authApi";
@@ -89,10 +90,11 @@ const MenuItems = () => {
       } else {
         await menuItemsApi.create(form);
       }
+      toast.success(editingId ? "Menu item updated" : "Menu item created");
       setModalOpen(false);
       fetchAll();
     } catch (err) {
-      alert(err.message || "Failed to save menu item");
+      toast.error(err.message || "Failed to save menu item");
     } finally {
       setSaving(false);
     }
@@ -103,8 +105,9 @@ const MenuItems = () => {
     try {
       await menuItemsApi.remove(item.id);
       setItems((prev) => prev.filter((i) => i.id !== item.id));
+      toast.success("Menu item deleted");
     } catch (err) {
-      alert(err.message || "Failed to delete menu item");
+      toast.error(err.message || "Failed to delete menu item");
     }
   };
 

@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
+
+import { toast } from "react-toastify";
+
 import { loginUser } from "../../services/authApi";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,7 +30,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      alert("Fill All Fields");
+      toast.error("Please fill all fields");
       return;
     }
     try {
@@ -34,16 +39,10 @@ const LoginForm = () => {
       console.log(data);
       console.log(formData);
 
-      // Local Storage wOrk
-      // const savedUser = JSON.parse(localStorage.getItem("user"));
-      // console.log(savedUser);
-
       if (data?.message) {
-        const storage = formData.remember ? localStorage : sessionStorage;
-        storage.setItem("user", JSON.stringify(data.data));
-        storage.setItem("accessToken", data.token.access);
-        storage.setItem("refreshToken", data.token.refresh);
-        alert(data.message);
+        console.log("Full Data inside login success:", data.data);
+        login(data.data, data.token, formData.remember);
+        toast.success(data.message);
 
         console.log("Full Data inside login success:", data.data);
         if (data.data && data.data.is_admin === true) {
@@ -52,11 +51,11 @@ const LoginForm = () => {
           navigate("/home");
         }
       } else {
-        alert("Invalid Credentials");
+        toast.error(data.message || "Invalid credentials");
       }
     } catch (error) {
       console.error(error);
-      alert("Something Went Wrong");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
