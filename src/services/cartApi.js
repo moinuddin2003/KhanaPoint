@@ -19,7 +19,7 @@ const getHeaders = () => {
 export const cartApi = {
   // 1. GET: Fetch current cart items
   getCart: async () => {
-    const response = await fetch(`${BASE_URL}order/cart/`, {
+    const response = await fetch(`${BASE_URL}/order/cart/`, {
       method: "GET",
       headers: getHeaders(),
     });
@@ -34,7 +34,7 @@ export const cartApi = {
       deal_id: dealId,
     };
 
-    const response = await fetch(`${BASE_URL}order/cart/add/`, {
+    const response = await fetch(`${BASE_URL}/order/cart/add/`, {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(payload),
@@ -46,7 +46,7 @@ export const cartApi = {
   // 3. PATCH: Update item quantity
   updateItemQuantity: async (itemId, quantity) => {
     const response = await fetch(
-      `${BASE_URL}order/cart/update-item/${itemId}/`,
+      `${BASE_URL}/order/cart/update-item/${itemId}/`,
       {
         method: "PATCH",
         headers: getHeaders(),
@@ -60,7 +60,7 @@ export const cartApi = {
   // 4. DELETE: Remove item from cart
   deleteItem: async (itemId) => {
     const response = await fetch(
-      `${BASE_URL}order/cart/delete-item/${itemId}/`,
+      `${BASE_URL}/order/cart/delete-item/${itemId}/`,
       {
         method: "DELETE",
         headers: getHeaders(),
@@ -72,7 +72,7 @@ export const cartApi = {
 
   // 5. POST: Complete Checkout / Place Order
   checkout: async (checkoutData) => {
-    const response = await fetch(`${BASE_URL}order/checkout/`, {
+    const response = await fetch(`${BASE_URL}/order/checkout/`, {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(checkoutData),
@@ -83,7 +83,7 @@ export const cartApi = {
 
   // 6. GET: Get order details (Tracking)
   getOrderDetails: async (orderId) => {
-    const response = await fetch(`${BASE_URL}order/order/${orderId}/`, {
+    const response = await fetch(`${BASE_URL}/order/order/${orderId}/`, {
       method: "GET",
       headers: getHeaders(),
     });

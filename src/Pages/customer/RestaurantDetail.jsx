@@ -31,8 +31,8 @@ export default function RestaurantDetail() {
       setLoading(true);
 
       Promise.all([
-        fetch(`${BASE_URL}restaurants/restaurant/${rest_id}`),
-        fetch(`${BASE_URL}restaurants/all-deal/`), // Deals API
+        fetch(`${BASE_URL}/restaurants/restaurant/${rest_id}`),
+        fetch(`${BASE_URL}/restaurants/all-deal/`), // Deals API
       ])
         .then(async ([resRestaurant, resDeals]) => {
           if (!resRestaurant.ok)

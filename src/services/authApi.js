@@ -1,9 +1,7 @@
-export const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://tgl7p3mt-8000.inc1.devtunnels.ms/";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const registerUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}user/register/`, {
+  const response = await fetch(`${BASE_URL}/user/register/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +17,7 @@ export const registerUser = async (userData) => {
 };
 
 export const loginUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}user/login/`, {
+  const response = await fetch(`${BASE_URL}/user/login/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

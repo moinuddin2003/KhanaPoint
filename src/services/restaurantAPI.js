@@ -2,7 +2,7 @@
 import { BASE_URL } from "./authApi";
 
 export const getRestaurants = async () => {
-  const response = await fetch(`${BASE_URL}restaurants/all-restaurant`, {
+  const response = await fetch(`${BASE_URL}/restaurants/all-restaurant`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -13,7 +13,7 @@ export const getRestaurants = async () => {
 };
 
 export const getMenuItems = async () => {
-  const response = await fetch(`${BASE_URL}restaurants/all-menuitem`);
+  const response = await fetch(`${BASE_URL}/restaurants/all-menuitem`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch menu items");
@@ -25,7 +25,7 @@ export const getMenuItems = async () => {
 };
 
 export const getDeals = async () => {
-  const response = await fetch(`${BASE_URL}restaurants/all-deal`);
+  const response = await fetch(`${BASE_URL}/restaurants/all-deal`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch deals");
@@ -36,7 +36,7 @@ export const getDeals = async () => {
 };
 
 export const getDealItems = async () => {
-  const response = await fetch(`${BASE_URL}restaurants/all-deal-item`);
+  const response = await fetch(`${BASE_URL}/restaurants/all-deal-item`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch deals");
@@ -47,7 +47,7 @@ export const getDealItems = async () => {
 };
 
 export const getDealCategories = async () => {
-  const response = await fetch(`${BASE_URL}restaurants/all-category`);
+  const response = await fetch(`${BASE_URL}/restaurants/all-category`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch deal categories");

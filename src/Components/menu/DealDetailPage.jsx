@@ -13,9 +13,7 @@ const DealDetailPage = ({ addToCart }) => {
     const fetchDealDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `http://127.0.0.1:8000/restaurants/deal/${dealId}/`,
-        );
+        const response = await fetch(`${BASE_URL}/restaurants/deal/${dealId}/`);
         const result = await response.json();
         setDeal(result.data);
       } catch (error) {

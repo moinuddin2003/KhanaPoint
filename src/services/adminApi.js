@@ -66,22 +66,22 @@ function toFormData(fields) {
 
 export const analyticsApi = {
   overview: () =>
-    request(`${BASE_URL}order/admin/analytics/overview/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/overview/`, { headers: jsonHeaders() }),
 
   ordersByStatus: () =>
-    request(`${BASE_URL}order/admin/analytics/orders-by-status/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/orders-by-status/`, { headers: jsonHeaders() }),
 
   popularDeals: () =>
-    request(`${BASE_URL}order/admin/analytics/popular-deals/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/popular-deals/`, { headers: jsonHeaders() }),
 
   popularItems: () =>
-    request(`${BASE_URL}order/admin/analytics/popular-items/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/popular-items/`, { headers: jsonHeaders() }),
 
   revenueByRestaurant: () =>
-    request(`${BASE_URL}order/admin/analytics/revenue-by-restaurant/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/revenue-by-restaurant/`, { headers: jsonHeaders() }),
 
   revenueOverTime: () =>
-    request(`${BASE_URL}order/admin/analytics/revenue-over-time/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/order/admin/analytics/revenue-over-time/`, { headers: jsonHeaders() }),
 };
 
 /* ------------------------------------------------------------------ */
@@ -89,10 +89,10 @@ export const analyticsApi = {
 /* ------------------------------------------------------------------ */
 
 export const ordersApi = {
-  getAll: () => request(`${BASE_URL}order/admin/orders`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/order/admin/orders`, { headers: jsonHeaders() }),
 
   updateStatus: (orderId, status) =>
-    request(`${BASE_URL}order/admin/orders/${orderId}/status/`, {
+    request(`${BASE_URL}/order/admin/orders/${orderId}/status/`, {
       method: "PATCH",
       headers: jsonHeaders(),
       body: JSON.stringify({ status }),
@@ -104,27 +104,27 @@ export const ordersApi = {
 /* ------------------------------------------------------------------ */
 
 export const categoriesApi = {
-  getAll: () => request(`${BASE_URL}restaurants/all-category`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/restaurants/all-category`, { headers: jsonHeaders() }),
 
   getOne: (catId) =>
-    request(`${BASE_URL}restaurants/category/${catId}`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/restaurants/category/${catId}`, { headers: jsonHeaders() }),
 
   create: (data) =>
-    request(`${BASE_URL}restaurants/create-category/`, {
+    request(`${BASE_URL}/restaurants/create-category/`, {
       method: "POST",
       headers: jsonHeaders(),
       body: JSON.stringify(data), // e.g. { name: "Pizza" }
     }),
 
   update: (catId, data) =>
-    request(`${BASE_URL}restaurants/update-category/${catId}/`, {
+    request(`${BASE_URL}/restaurants/update-category/${catId}/`, {
       method: "PATCH",
       headers: jsonHeaders(),
       body: JSON.stringify(data),
     }),
 
   remove: (catId) =>
-    request(`${BASE_URL}restaurants/delete-category/${catId}/`, {
+    request(`${BASE_URL}/restaurants/delete-category/${catId}/`, {
       method: "DELETE",
       headers: jsonHeaders(),
     }),
@@ -138,11 +138,11 @@ export const restaurantsApi = {
   getAll: () => request(`${BASE_URL}restaurants/all-restaurant`, { headers: jsonHeaders() }),
 
   getOne: (restId) =>
-    request(`${BASE_URL}restaurants/restaurant/${restId}`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/restaurants/restaurant/${restId}`, { headers: jsonHeaders() }),
 
   // fields example: { name, description, address, image (File) }
   create: (fields) =>
-    request(`${BASE_URL}restaurants/create-restaurant/`, {
+    request(`${BASE_URL}/restaurants/create-restaurant/`, {
       method: "POST",
       headers: formHeaders(),
       body: toFormData(fields),
@@ -188,7 +188,7 @@ export const menuItemsApi = {
     }),
 
   remove: (menuId) =>
-    request(`${BASE_URL}restaurants/delete-menuitem/${menuId}/`, {
+    request(`${BASE_URL}/restaurants/delete-menuitem/${menuId}/`, {
       method: "DELETE",
       headers: jsonHeaders(),
     }),
@@ -199,28 +199,28 @@ export const menuItemsApi = {
 /* ------------------------------------------------------------------ */
 
 export const dealsApi = {
-  getAll: () => request(`${BASE_URL}restaurants/all-deal`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/restaurants/all-deal`, { headers: jsonHeaders() }),
 
   getOne: (dealId) =>
-    request(`${BASE_URL}restaurants/deal/${dealId}/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/restaurants/deal/${dealId}/`, { headers: jsonHeaders() }),
 
   // fields example: { name, combo_price, image (File) }
   create: (fields) =>
-    request(`${BASE_URL}restaurants/create-deal/`, {
+    request(`${BASE_URL}/restaurants/create-deal/`, {
       method: "POST",
       headers: formHeaders(),
       body: toFormData(fields),
     }),
 
   update: (dealId, fields) =>
-    request(`${BASE_URL}restaurants/update-deal/${dealId}/`, {
+    request(`${BASE_URL}/restaurants/update-deal/${dealId}/`, {
       method: "PATCH",
       headers: formHeaders(),
       body: toFormData(fields),
     }),
 
   remove: (dealId) =>
-    request(`${BASE_URL}restaurants/delete-deal/${dealId}/`, {
+    request(`${BASE_URL}/restaurants/delete-deal/${dealId}/`, {
       method: "DELETE",
       headers: jsonHeaders(),
     }),
@@ -231,28 +231,28 @@ export const dealsApi = {
 /* ------------------------------------------------------------------ */
 
 export const dealItemsApi = {
-  getAll: () => request(`${BASE_URL}restaurants/all-deal-item/`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/restaurants/all-deal-item/`, { headers: jsonHeaders() }),
 
   getOne: (itemId) =>
-    request(`${BASE_URL}restaurants/deal-item/${itemId}/`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/restaurants/deal-item/${itemId}/`, { headers: jsonHeaders() }),
 
   // fields example: { deal, menu_item, quantity }
   create: (data) =>
-    request(`${BASE_URL}restaurants/create-deal-item/`, {
+    request(`${BASE_URL}/restaurants/create-deal-item/`, {
       method: "POST",
       headers: jsonHeaders(),
       body: JSON.stringify(data),
     }),
 
   update: (itemId, data) =>
-    request(`${BASE_URL}restaurants/update-deal-item/${itemId}/`, {
+    request(`${BASE_URL}/restaurants/update-deal-item/${itemId}/`, {
       method: "PATCH",
       headers: jsonHeaders(),
       body: JSON.stringify(data),
     }),
 
   remove: (itemId) =>
-    request(`${BASE_URL}restaurants/delete-deal-item/${itemId}/`, {
+    request(`${BASE_URL}/restaurants/delete-deal-item/${itemId}/`, {
       method: "DELETE",
       headers: jsonHeaders(),
     }),
