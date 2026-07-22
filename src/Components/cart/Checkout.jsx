@@ -69,7 +69,7 @@ export default function Checkout({
                   <img
                     src={
                       item.image
-                        ? `${localStorage.getItem("BASE_URL") || "http://127.0.0.1:8000"}${item.image}`
+                        ? `${localStorage.getItem("BASE_URL") || BASE_URL}${item.image}`
                         : "https://placehold.co/128x96?text=No+Image"
                     }
                     alt={item.name}

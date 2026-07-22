@@ -135,7 +135,7 @@ export const categoriesApi = {
 /* ------------------------------------------------------------------ */
 
 export const restaurantsApi = {
-  getAll: () => request(`${BASE_URL}restaurants/all-restaurant`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/restaurants/all-restaurant`, { headers: jsonHeaders() }),
 
   getOne: (restId) =>
     request(`${BASE_URL}/restaurants/restaurant/${restId}`, { headers: jsonHeaders() }),
@@ -149,14 +149,14 @@ export const restaurantsApi = {
     }),
 
   update: (restId, fields) =>
-    request(`${BASE_URL}restaurants/update-restaurant/${restId}/`, {
+    request(`${BASE_URL}/restaurants/update-restaurant/${restId}/`, {
       method: "PATCH",
       headers: formHeaders(),
       body: toFormData(fields),
     }),
 
   remove: (restId) =>
-    request(`${BASE_URL}restaurants/delete-restaurant/${restId}/`, {
+    request(`${BASE_URL}/restaurants/delete-restaurant/${restId}/`, {
       method: "DELETE",
       headers: jsonHeaders(),
     }),
@@ -167,21 +167,21 @@ export const restaurantsApi = {
 /* ------------------------------------------------------------------ */
 
 export const menuItemsApi = {
-  getAll: () => request(`${BASE_URL}restaurants/all-menuitem`, { headers: jsonHeaders() }),
+  getAll: () => request(`${BASE_URL}/restaurants/all-menuitem`, { headers: jsonHeaders() }),
 
   getOne: (menuId) =>
-    request(`${BASE_URL}restaurants/menuitem/${menuId}`, { headers: jsonHeaders() }),
+    request(`${BASE_URL}/restaurants/menuitem/${menuId}`, { headers: jsonHeaders() }),
 
   // fields example: { name, description, price, category, restaurant, image (File) }
   create: (fields) =>
-    request(`${BASE_URL}restaurants/create-menuitem/`, {
+    request(`${BASE_URL}/restaurants/create-menuitem/`, {
       method: "POST",
       headers: formHeaders(),
       body: toFormData(fields),
     }),
 
   update: (menuId, fields) =>
-    request(`${BASE_URL}restaurants/update-menuitem/${menuId}/`, {
+    request(`${BASE_URL}/restaurants/update-menuitem/${menuId}/`, {
       method: "PATCH",
       headers: formHeaders(),
       body: toFormData(fields),

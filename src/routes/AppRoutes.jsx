@@ -23,6 +23,7 @@ import MenuItems from "../Pages/admin/MenuItems";
 import Deals from "../Pages/admin/Deals";
 import DealItems from "../Pages/admin/DealItems";
 import ScrollToHash from "../Components/common/ScrollToHash";
+import TrackOrder from "../Pages/customer/TrackOrder";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route path="/restaurants/:rest_id" element={<RestaurantDetail />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders/track" element={<TrackOrder />} />;
         </Route>
 
         <Route path="/signup" element={<Signup />} />

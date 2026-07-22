@@ -90,4 +90,14 @@ export const cartApi = {
     if (!response.ok) throw new Error("Failed to fetch order details");
     return response.json();
   },
+
+  // 7. GET: List all of the logged-in user's orders (for the Track Order page)
+  getUserOrders: async () => {
+    const response = await fetch(`${BASE_URL}/order/orders/`, {
+      method: "GET",
+      headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch your orders");
+    return response.json();
+  },
 };

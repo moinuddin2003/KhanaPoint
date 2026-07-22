@@ -1,6 +1,10 @@
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { menuItemsApi, restaurantsApi, categoriesApi } from "../../services/adminApi";
+import {
+  menuItemsApi,
+  restaurantsApi,
+  categoriesApi,
+} from "../../services/adminApi";
 import { BASE_URL } from "../../services/authApi";
 import Loader from "../../Components/common/Loader";
 import Modal from "../../Components/common/Modal";
@@ -8,10 +12,19 @@ import Button from "../../Components/common/Button";
 import Input from "../../Components/common/Input";
 import { Plus, Pencil, Trash2, UtensilsCrossed } from "lucide-react";
 
-const asList = (res) => res?.data || res?.results || (Array.isArray(res) ? res : []);
+const asList = (res) =>
+  res?.data || res?.results || (Array.isArray(res) ? res : []);
 
 // Confirmed from MenuItemSerializer: model FK fields are literally named restaurant_id / category_id
-const EMPTY_FORM = { name: "", description: "", price: "", category_id: "", restaurant_id: "", image: null };
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  price: "",
+  category_id: "",
+  restaurant_id: "",
+  is_available: true,
+  image: null,
+};
 
 const MenuItems = () => {
   const [items, setItems] = useState([]);
@@ -65,6 +78,7 @@ const MenuItems = () => {
       // but create/update expect the flat "category_id"/"restaurant_id" keys.
       category_id: item.category?.id || "",
       restaurant_id: item.restaurant?.id || "",
+      is_available: item.is_available ?? true,
       image: null,
     });
     setPreview(item.image ? `${BASE_URL}${item.image}` : null);
@@ -72,7 +86,11 @@ const MenuItems = () => {
   };
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -146,7 +164,10 @@ const MenuItems = () => {
             <tbody className="divide-y divide-gray-100">
               {items.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-gray-400">
+                  <td
+                    colSpan={5}
+                    className="px-5 py-10 text-center text-gray-400"
+                  >
                     No menu items yet.
                   </td>
                 </tr>
@@ -157,16 +178,29 @@ const MenuItems = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center shrink-0">
                           {item.image ? (
-                            <img src={`${BASE_URL}${item.image}`} alt={item.name} className="w-full h-full object-cover" />
+                            <img
+                              src={`${BASE_URL}${item.image}`}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
-                            <UtensilsCrossed className="text-gray-300" size={16} />
+                            <UtensilsCrossed
+                              className="text-gray-300"
+                              size={16}
+                            />
                           )}
                         </div>
-                        <span className="font-medium text-brand-dark">{item.name}</span>
+                        <span className="font-medium text-brand-dark">
+                          {item.name}
+                        </span>
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-gray-600">{item.restaurant?.name || "—"}</td>
-                    <td className="px-5 py-3 text-gray-600">{item.category?.name || "—"}</td>
+                    <td className="px-5 py-3 text-gray-600">
+                      {item.restaurant?.name || "—"}
+                    </td>
+                    <td className="px-5 py-3 text-gray-600">
+                      {item.category?.name || "—"}
+                    </td>
                     <td className="px-5 py-3 text-gray-600">£{item.price}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -198,7 +232,13 @@ const MenuItems = () => {
         title={editingId ? "Edit Menu Item" : "Add Menu Item"}
       >
         <form onSubmit={handleSubmit} className="space-y-5">
-          <Input label="Name" name="name" value={form.name} onChange={handleChange} required />
+          <Input
+            label="Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
           <Input
             label="Description"
             name="description"
@@ -226,7 +266,9 @@ const MenuItems = () => {
           >
             <option value="">Select restaurant</option>
             {restaurants.map((r) => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
             ))}
           </Input>
 
@@ -240,18 +282,46 @@ const MenuItems = () => {
           >
             <option value="">Select category</option>
             {categories.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </Input>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-2">Image</label>
+            <label className="block text-xs font-medium text-gray-500 mb-2">
+              Image
+            </label>
             {preview && (
-              <img src={preview} alt="Preview" className="w-24 h-24 object-cover rounded-xl border border-gray-200 mb-2" />
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-24 h-24 object-cover rounded-xl border border-gray-200 mb-2"
+              />
             )}
-            <input type="file" accept="image/*" onChange={handleImageChange} className="text-sm text-gray-600" />
-            {editingId && <p className="text-xs text-gray-400 mt-1">Leave empty to keep the current image.</p>}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="text-sm text-gray-600"
+            />
+            {editingId && (
+              <p className="text-xs text-gray-400 mt-1">
+                Leave empty to keep the current image.
+              </p>
+            )}
           </div>
+
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              name="is_available"
+              checked={form.is_available}
+              onChange={handleChange}
+              className="h-4 w-4 accent-brand-orange"
+            />
+            Available for ordering
+          </label>
 
           <Button type="submit" full loading={saving}>
             {editingId ? "Save Changes" : "Create Menu Item"}

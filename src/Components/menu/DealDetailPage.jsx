@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // <--- useParams aur navigate nikaala
+import { useParams, useNavigate } from "react-router"; // <--- useParams aur navigate nikaala
 import { BASE_URL } from "../../services/authApi";
+import { cartApi } from "../../services/cartApi";
+import { toast } from "react-toastify";
 
 // Yahan props se dealId hata diya, direct hook se nikalenge
-const DealDetailPage = ({ addToCart }) => {
+const DealDetailPage = () => {
   const { dealId } = useParams(); // <--- URL se id mil gayi! (/deal/12 -> dealId = 12)
   const navigate = useNavigate();
   const [deal, setDeal] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     const fetchDealDetails = async () => {
@@ -102,21 +105,22 @@ const DealDetailPage = ({ addToCart }) => {
 
               <button
                 onClick={() => {
-                  if (addToCart) {
-                    addToCart({
-                      id: deal.id,
-                      name: deal.name,
-                      price: deal.combo_price,
-                      image: `${BASE_URL}${deal.image}`,
-                      items: deal.items,
-                      type: "deal",
-                    });
-                    alert(`${deal.name} added to cart! 🎉`);
-                  }
+                  setAdding(true);
+                  cartApi
+                    .addToCart(null, deal.id) // null menu_item_id, real deal_id
+                    .then(() => {
+                      toast.success(`${deal.name} added to cart! 🎉`);
+                      window.dispatchEvent(new Event("cartUpdated"));
+                    })
+                    .catch((err) =>
+                      toast.error(err.message || "Failed to add deal to cart"),
+                    )
+                    .finally(() => setAdding(false));
                 }}
-                className="w-full bg-[#03081f] hover:bg-[#fc8a06] text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 cursor-pointer"
+                disabled={adding}
+                className="w-full bg-[#03081f] hover:bg-[#fc8a06] text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 cursor-pointer disabled:opacity-60"
               >
-                Add Deal to Cart 🛒
+                {adding ? "Adding..." : "Add Deal to Cart 🛒"}
               </button>
             </div>
           </div>
