@@ -4,9 +4,9 @@ const Footer = () => {
   return (
     <footer className="w-full flex flex-col font-body">
       {/* ══════════════════════ DESKTOP (unchanged) ══════════════════════ */}
-      <div className="hidden lg:block">
-        <div className="w-full h-[371px] bg-[#D9D9D9] text-brand-dark border-b border-black/5">
-          <div className="mx-auto max-w-[1528px] h-full px-6 pt-[60px] pb-10 flex justify-between items-start">
+      <div className="hidden lg:block px-6">
+        <div className="mx-auto max-w-[1528px] h-[371px] bg-[#D9D9D9] text-brand-dark border-b border-black/5 rounded-xl">
+          <div className="h-full px-8 pt-[60px] pb-10 flex justify-between items-start">
             {/* Column 1: Brand Info & App Badges */}
             <div className="flex flex-col gap-5 max-w-[361px]">
               <img
@@ -60,7 +60,6 @@ const Footer = () => {
                   className="w-[45px] h-[45px] object-contain cursor-pointer hover:opacity-80 transition-opacity"
                 />
                 <img
-                
                   src={Images.Tiktok}
                   alt="TikTok"
                   className="w-[45px] h-[45px] object-contain cursor-pointer hover:opacity-80 transition-opacity"
@@ -117,8 +116,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="w-full h-[73px] bg-brand-dark text-white text-sm">
-          <div className="mx-auto max-w-[1528px] h-full px-6 flex items-center justify-between">
+        <div className="mx-auto max-w-[1528px] mt-2 h-[73px] bg-brand-dark text-white text-sm rounded-xl">
+          <div className="h-full px-8 flex items-center justify-between">
             <span className="opacity-90">
               Order.uk Copyright 2024, All Rights Reserved.
             </span>
@@ -137,8 +136,8 @@ const Footer = () => {
       </div>
 
       {/* ══════════════════════ MOBILE (per Figma "Mobile Home", node 1:347) ══════════════════════ */}
-      <div className="lg:hidden w-full bg-[#D9D9D9] text-brand-dark">
-        <div className="flex flex-col items-center px-6 pt-10 pb-8 gap-4">
+      <div className="lg:hidden w-full px-4 bg-[#D9D9D9] text-brand-dark">
+        <div className="flex flex-col items-center pt-10 pb-8 gap-4">
           {/* Logo */}
           <img
             src={Images.FooterUK}
@@ -248,7 +247,7 @@ const Footer = () => {
 
         {/* Bottom copyright bar */}
         <div className="w-full bg-brand-dark text-white text-sm">
-          <div className="px-6 py-5 flex flex-col items-center gap-2 text-center">
+          <div className="px-4 py-5 flex flex-col items-center gap-2 text-center">
             <span className="opacity-90">
               Order.uk Copyright 2024, All Rights Reserved.
             </span>

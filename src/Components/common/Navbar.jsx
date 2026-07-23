@@ -9,9 +9,9 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 
 const navLinks = [
-  { label: "Home", path: "/home" },
-  { label: "Browse Menu", path: "/home#menu" },
-  { label: "Special Offers", path: "/home#deals" },
+  { label: "Home", path: "/" },
+  { label: "Browse Menu", path: "/#menu" },
+  { label: "Special Offers", path: "/#deals" },
   { label: "Track Order", path: "/orders/track" },
 ];
 

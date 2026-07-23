@@ -48,7 +48,7 @@ const LoginForm = () => {
         if (data.data && data.data.is_admin === true) {
           navigate("/admin");
         } else {
-          navigate("/home");
+          navigate("/");
         }
       } else {
         toast.error(data.message || "Invalid credentials");

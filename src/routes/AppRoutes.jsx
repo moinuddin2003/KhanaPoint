@@ -7,6 +7,7 @@ import Cart from "../Pages/customer/Cart";
 import Login from "../Pages/auth/Login";
 import Signup from "../Pages/auth/Signup";
 import AdminRoute from "./AdminRoute";
+import CustomerRoute from "./CustomerRoute";
 import Layout from "../Components/layout/Layout";
 import CategoryPage from "../Components/menu/CategoryDetailPage";
 import DealDetailPage from "../Components/menu/DealDetailPage";
@@ -31,7 +32,15 @@ const AppRoutes = () => {
       <ScrollToTop />
       <ScrollToHash />
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={
+            <CustomerRoute>
+              <Layout />
+            </CustomerRoute>
+          }
+        >
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/deal/:dealId" element={<DealDetailPage />} />
           <Route path="/restaurants/:rest_id" element={<RestaurantDetail />} />

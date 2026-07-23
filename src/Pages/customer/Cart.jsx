@@ -129,7 +129,7 @@ export default function Cart() {
         <button
           onClick={() => {
             setIsOrderPlaced(false);
-            navigate("/home");
+            navigate("/");
           }}
           className="mt-6 rounded-lg bg-black text-white px-6 py-3 font-semibold hover:bg-gray-800 transition"
         >

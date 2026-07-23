@@ -1,35 +1,29 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router"; // URL se ID nikalne ke liye
+import { useParams } from "react-router";
 import { FaClock } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
 import { Images } from "../../assets";
-import { BASE_URL } from "../../services/authApi"; // Agar BASE_URL defined hai backend domain ke liye
 
 export default function RestaurantHero({ data }) {
-  const { rest_id } = useParams(); // URL se dynamic ID li
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   const restaurant = data;
 
-  // Agar restaurant ka data kisi wajah se na mile
   if (!restaurant) {
     return (
-      <section className="px-4 sm:px-6 md:px-10 lg:px-8 xl:px-20 py-6 sm:py-10 text-center">
+      <section className="py-6 text-center">
         <p className="text-gray-500">Restaurant details not found.</p>
       </section>
     );
   }
 
-  const restaurantImage = restaurant.image
-    ? restaurant.image // already a full URL — RestaurantDetail's getFullImageUrl() already built this
-    : Images.PlaceholderRestaurant; // use whatever fallback image you have, or "" if none
+  const restaurantImage = restaurant.image || Images.PlaceholderRestaurant;
 
   return (
-    <section className="px-4 sm:px-6 md:px-10 lg:px-8 xl:px-20 py-6 sm:py-10">
+    <section className="w-full">
       <div className="relative overflow-visible rounded-2xl">
         {/* Main Inner Container */}
-        <div className="relative overflow-hidden rounded-2xl h-auto min-h-80 sm:min-h-95 lg:min-h-0 lg:h-[380px] xl:h-[420px] flex flex-col lg:block justify-center py-8 lg:py-0">
+        <div className="relative overflow-hidden rounded-2xl h-auto min-h-80 lg:h-[380px] xl:h-[420px] flex flex-col lg:block justify-center py-8 lg:py-0">
           {/* Background Image */}
           <img
             src={isDark ? Images.bgImgDark : Images.bgImg}
@@ -37,9 +31,7 @@ export default function RestaurantHero({ data }) {
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
 
-          {/* =========================================
-              DESKTOP VIEW IMAGES (Dynamic Profile/Dish Image)
-          ========================================= */}
+          {/* Desktop Right Side Image */}
           <img
             src={restaurantImage}
             alt={restaurant.name}
@@ -54,11 +46,9 @@ export default function RestaurantHero({ data }) {
             />
           </div>
 
-          {/* =========================================
-              MOBILE VIEW CONTENT (Flex Stack Layout)
-          ========================================= */}
+          {/* Mobile & Desktop Text Overlay */}
           <div className="relative z-20 flex flex-col items-center lg:items-start lg:block w-full h-full">
-            {/* 1. Mobile Top Dynamic Image */}
+            {/* Mobile Top Image */}
             <div className="flex justify-center lg:hidden w-full order-1 px-4 mb-6 mt-4 relative">
               <div className="relative inline-flex justify-center items-center">
                 <img
@@ -66,7 +56,6 @@ export default function RestaurantHero({ data }) {
                   alt={restaurant.name}
                   className="h-48 sm:h-60 object-contain rounded-xl relative z-10 shadow-md"
                 />
-                {/* Overlapping Review Badge */}
                 <div className="absolute -left-6 sm:-left-10 top-40 -translate-y-1/2 w-20 sm:w-24 bg-white rounded-xl shadow-xl p-2 z-20">
                   <img
                     src={Images.ReviewsNumber}
@@ -77,19 +66,18 @@ export default function RestaurantHero({ data }) {
               </div>
             </div>
 
-            {/* 2. Mobile Orange Button */}
-            <div className="lg:hidden order-2 w-full px-4 sm:px-10 mb-8 flex justify-center">
+            {/* Mobile Open Button */}
+            <div className="lg:hidden order-2 w-full px-4 mb-8 flex justify-center">
               <button className="w-full bg-[#FC8A06] hover:bg-orange-600 text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg text-base sm:text-lg">
                 <FaClock className="text-lg sm:text-xl" />
                 <span>Open until 10:30 AM</span>
               </button>
             </div>
 
-            {/* 3. Text & Badges (Dynamic Content) */}
-            <div className="relative z-30 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-4 sm:px-10 lg:px-12 xl:px-20 w-full lg:w-[55%] xl:w-1/2 order-3 lg:h-full lg:absolute lg:top-0 lg:left-0">
-              {/* Dynamic Description / Tagline */}
+            {/* Text & Badges Content */}
+            <div className="relative z-30 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-4 sm:px-8 lg:px-12 w-full lg:w-[55%] xl:w-1/2 order-3 lg:h-full lg:absolute lg:top-0 lg:left-0">
               <p
-                className={`text-sm sm:text-base md:text-sm mb-2 sm:mb-3 font-medium line-clamp-2 max-w-sm ${
+                className={`text-sm sm:text-base mb-2 font-medium line-clamp-2 max-w-sm ${
                   isDark ? "text-gray-200 lg:text-white" : "text-gray-700"
                 }`}
               >
@@ -97,9 +85,8 @@ export default function RestaurantHero({ data }) {
                   "Your favorite meals, delivered fresh!"}
               </p>
 
-              {/* Dynamic Restaurant Name & Address */}
               <h1
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold leading-tight ${
+                className={`text-3xl sm:text-4xl lg:text-4xl xl:text-5xl font-bold leading-tight ${
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
@@ -110,23 +97,23 @@ export default function RestaurantHero({ data }) {
               </h1>
 
               {/* Info Badges */}
-              <div className="flex flex-col xl:flex-row lg:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 w-full lg:w-auto">
-                <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-4 lg:py-3 rounded-full text-sm sm:text-base lg:text-sm xl:text-md w-full lg:w-auto shadow-md">
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8 w-full lg:w-auto">
+                <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-3 rounded-full text-sm w-full lg:w-auto shadow-md">
                   <img
                     src={Images.MotoCross}
                     alt="Minimum Order"
-                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                    className="w-5 h-5 object-contain"
                   />
                   <span className="whitespace-nowrap font-medium">
                     Minimum Order: 12 GBP
                   </span>
                 </div>
 
-                <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-4 lg:py-3 rounded-full text-sm sm:text-base lg:text-sm xl:text-md w-full lg:w-auto shadow-md">
+                <div className="flex items-center justify-center lg:justify-start gap-3 bg-[#03081F] text-white px-4 xl:px-5 py-3 rounded-full text-sm w-full lg:w-auto shadow-md">
                   <img
                     src={Images.OrderComplete}
                     alt="Delivery Time"
-                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                    className="w-5 h-5 object-contain"
                   />
                   <span className="whitespace-nowrap font-medium">
                     Delivery in 20-25 Min
@@ -137,9 +124,7 @@ export default function RestaurantHero({ data }) {
           </div>
         </div>
 
-        {/* =========================================
-            DESKTOP BOTTOM BUTTON (Hidden on Mobile)
-        ========================================= */}
+        {/* Desktop Bottom Button */}
         <div className="hidden lg:flex lg:absolute lg:left-0 lg:top-full lg:-translate-y-1/2 lg:z-30">
           <button className="bg-[#FC8A06] hover:bg-orange-600 text-white px-6 xl:px-8 py-3 xl:py-4 lg:rounded-t-none lg:rounded-tr-xl lg:rounded-br-none lg:rounded-bl-none font-semibold flex items-center justify-start gap-2 transition-colors">
             <FaClock className="text-base" />

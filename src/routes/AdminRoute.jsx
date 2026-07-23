@@ -8,7 +8,7 @@ const AdminRoute = ({ children }) => {
 
   // If there is no logged-in user, or they are not an admin, boot them back to the login page
   if (!user || user.is_admin !== true) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Otherwise, render the admin page component

@@ -8,12 +8,19 @@ import Button from "../../Components/common/Button";
 import Input from "../../Components/common/Input";
 import { Plus, Pencil, Trash2, BadgePercent } from "lucide-react";
 
-const asList = (res) => res?.data || res?.results || (Array.isArray(res) ? res : []);
+const asList = (res) =>
+  res?.data || res?.results || (Array.isArray(res) ? res : []);
 
 // Confirmed from DealSerializer: required fields are name, combo_price, restaurant_id.
 // description/image are optional but included in the model.
-const EMPTY_FORM = { name: "", description: "", combo_price: "", restaurant_id: "", image: null };
-
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  combo_price: "",
+  restaurant_id: "",
+  is_active: true,
+  image: null,
+};
 const Deals = () => {
   const [deals, setDeals] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -65,6 +72,7 @@ const Deals = () => {
       description: deal.description || "",
       combo_price: deal.combo_price || "",
       restaurant_id: deal.restaurant_id || "",
+      is_active: deal.is_active ?? true,
       image: null,
     });
     setPreview(deal.image ? `${BASE_URL}${deal.image}` : null);
@@ -72,7 +80,11 @@ const Deals = () => {
   };
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -138,25 +150,44 @@ const Deals = () => {
           </p>
         ) : (
           deals.map((deal) => (
-            <div key={deal.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div
+              key={deal.id}
+              className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+            >
               <div className="h-36 bg-gray-100 flex items-center justify-center overflow-hidden">
                 {deal.image ? (
-                  <img src={`${BASE_URL}${deal.image}`} alt={deal.name} className="w-full h-full object-cover" />
+                  <img
+                    src={`${BASE_URL}${deal.image}`}
+                    alt={deal.name}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <BadgePercent className="text-gray-300" size={32} />
                 )}
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-brand-dark truncate">{deal.name}</h3>
+                <h3 className="font-bold text-brand-dark truncate">
+                  {deal.name}
+                </h3>
                 <p className="text-xs text-gray-500 truncate mt-0.5">
                   {restaurantName(deal.restaurant_id)}
                 </p>
-                <p className="text-sm text-brand-orange font-semibold mt-1">£{deal.combo_price}</p>
+                <p className="text-sm text-brand-orange font-semibold mt-1">
+                  £{deal.combo_price}
+                </p>
                 <div className="flex items-center gap-2 mt-3">
-                  <Button variant="outline" size="sm" onClick={() => openEditModal(deal)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEditModal(deal)}
+                  >
                     <Pencil size={13} /> Edit
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => handleDelete(deal)}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDelete(deal)}
+                  >
                     <Trash2 size={13} /> Delete
                   </Button>
                 </div>
@@ -166,9 +197,19 @@ const Deals = () => {
         )}
       </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editingId ? "Edit Deal" : "Add Deal"}>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editingId ? "Edit Deal" : "Add Deal"}
+      >
         <form onSubmit={handleSubmit} className="space-y-5">
-          <Input label="Deal Name" name="name" value={form.name} onChange={handleChange} required />
+          <Input
+            label="Deal Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
           <Input
             label="Description"
             name="description"
@@ -196,17 +237,44 @@ const Deals = () => {
           >
             <option value="">Select restaurant</option>
             {restaurants.map((r) => (
-              <option key={r.id} value={r.id}>{r.name}</option>
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
             ))}
           </Input>
 
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              name="is_active"
+              checked={form.is_active}
+              onChange={handleChange}
+              className="h-4 w-4 accent-brand-orange"
+            />
+            Active (visible to customers / orderable)
+          </label>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-2">Image</label>
+            <label className="block text-xs font-medium text-gray-500 mb-2">
+              Image
+            </label>
             {preview && (
-              <img src={preview} alt="Preview" className="w-24 h-24 object-cover rounded-xl border border-gray-200 mb-2" />
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-24 h-24 object-cover rounded-xl border border-gray-200 mb-2"
+              />
             )}
-            <input type="file" accept="image/*" onChange={handleImageChange} className="text-sm text-gray-600" />
-            {editingId && <p className="text-xs text-gray-400 mt-1">Leave empty to keep the current image.</p>}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="text-sm text-gray-600"
+            />
+            {editingId && (
+              <p className="text-xs text-gray-400 mt-1">
+                Leave empty to keep the current image.
+              </p>
+            )}
           </div>
 
           <Button type="submit" full loading={saving}>

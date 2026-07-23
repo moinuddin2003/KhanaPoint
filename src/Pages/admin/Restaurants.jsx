@@ -8,7 +8,8 @@ import Button from "../../Components/common/Button";
 import Input from "../../Components/common/Input";
 import { Plus, Pencil, Trash2, Store } from "lucide-react";
 
-const asList = (res) => res?.data || res?.results || (Array.isArray(res) ? res : []);
+const asList = (res) =>
+  res?.data || res?.results || (Array.isArray(res) ? res : []);
 
 // ADJUST ME: match these fields to whatever create-restaurant/update-restaurant actually accept
 const EMPTY_FORM = { name: "", description: "", address: "", image: null };
@@ -60,6 +61,8 @@ const Restaurants = () => {
         name: data.name || "",
         description: data.description || "",
         address: data.address || "",
+        is_active: data.is_active ?? true,
+
         image: null, // leave empty - only send a new file if the admin picks one
       });
       setPreview(data.image ? `${BASE_URL}${data.image}` : null);
@@ -76,7 +79,11 @@ const Restaurants = () => {
   };
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -122,7 +129,9 @@ const Restaurants = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-brand-dark">Restaurants</h1>
-          <p className="text-sm text-gray-500 mt-1">{restaurants.length} restaurants</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {restaurants.length} restaurants
+          </p>
         </div>
         <Button onClick={openCreateModal}>
           <Plus size={16} /> Add Restaurant
@@ -158,15 +167,25 @@ const Restaurants = () => {
                 )}
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-brand-dark truncate">{restaurant.name}</h3>
+                <h3 className="font-bold text-brand-dark truncate">
+                  {restaurant.name}
+                </h3>
                 <p className="text-xs text-gray-500 truncate mt-1">
                   {restaurant.address || "No address"}
                 </p>
                 <div className="flex items-center gap-2 mt-3">
-                  <Button variant="outline" size="sm" onClick={() => openEditModal(restaurant)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEditModal(restaurant)}
+                  >
                     <Pencil size={13} /> Edit
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => handleDelete(restaurant)}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDelete(restaurant)}
+                  >
                     <Trash2 size={13} /> Delete
                   </Button>
                 </div>
@@ -182,7 +201,13 @@ const Restaurants = () => {
         title={editingId ? "Edit Restaurant" : "Add Restaurant"}
       >
         <form onSubmit={handleSubmit} className="space-y-5">
-          <Input label="Name" name="name" value={form.name} onChange={handleChange} required />
+          <Input
+            label="Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
           <Input
             label="Address"
             name="address"
@@ -197,8 +222,20 @@ const Restaurants = () => {
             onChange={handleChange}
           />
 
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              name="is_active"
+              checked={form.is_active}
+              onChange={handleChange}
+              className="h-4 w-4 accent-brand-orange"
+            />
+            Active (visible to customers)
+          </label>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-2">Image</label>
+            <label className="block text-xs font-medium text-gray-500 mb-2">
+              Image
+            </label>
             {preview && (
               <img
                 src={preview}
@@ -213,7 +250,9 @@ const Restaurants = () => {
               className="text-sm text-gray-600"
             />
             {editingId && (
-              <p className="text-xs text-gray-400 mt-1">Leave empty to keep the current image.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Leave empty to keep the current image.
+              </p>
             )}
           </div>
 

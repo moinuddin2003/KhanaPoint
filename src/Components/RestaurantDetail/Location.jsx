@@ -1,11 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
 import { Images } from "../../assets";
 
-// Hardcoded for now — will be replaced by API-driven data later.
-// Shape mirrors what the future restaurant object will look like.
 const restaurant = {
   name: "McDonald's East London",
   hours: {
@@ -33,20 +30,16 @@ const restaurant = {
     "If you have allergies or other dietary restrictions, please contact the restaurant. The restaurant will provide food-specific information upon request.",
   phone: "+934443-43",
   website: "http://mcdonalds.uk/",
-  // Real coordinates — Tooley St, London Bridge, SE1 2TF
-  location: { lat: 51.5045, lng: -0.0865 },
   mapCard: {
     name: "McDonald's",
     branch: "South London",
     address: "Tooley St, London Bridge, London SE1 2TF, United Kingdom",
     phone: "+934443-43",
     website: "http://mcdonalds.uk/",
-    // Real coordinates for the nearby branch shown as a pin on the map
     location: { lat: 51.498, lng: -0.091 },
   },
 };
 
-// Custom marker matching Figma exactly
 const createNearbyPinIcon = (name, branch) =>
   L.divIcon({
     className: "",
@@ -85,22 +78,22 @@ const createNearbyPinIcon = (name, branch) =>
 
 const Location = () => {
   return (
-    <div className="w-full flex flex-col lg:gap-8 py-10 md:py-20 px-4 sm:px-6 lg:px-20 max-w-[1528px] mx-auto">
-      {/* ── Info row: Delivery / Contact / Operational Times ── */}
+    <div className="w-full flex flex-col gap-8 py-6">
+      {/* Info Row */}
       <div className="w-full rounded-[12px] shadow-[5px_5px_14px_0px_rgba(0,0,0,0.25)] overflow-hidden flex flex-col lg:flex-row bg-[#fbfbfb]">
-        {/* Delivery information */}
-        <div className="flex-1 p-6 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-black/10">
+        {/* Delivery info */}
+        <div className="flex-1 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-black/10">
           <div className="flex items-center gap-3 mb-4">
             <img
               src={Images.DeliveryIcon}
               alt=""
-              className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
+              className="w-8 h-8 lg:w-11 lg:h-11 object-contain"
             />
-            <h3 className="text-[18px] lg:text-[22px] font-bold text-[#03081F]">
+            <h3 className="text-lg lg:text-xl font-bold text-[#03081F]">
               Delivery information
             </h3>
           </div>
-          <ul className="flex flex-col gap-2 text-[13px] lg:text-[15px] text-[#03081F]">
+          <ul className="flex flex-col gap-2 text-sm text-[#03081F]">
             {restaurant.hours.delivery.map((row) => (
               <li key={row.day}>
                 <span className="font-bold">{row.day}:</span> {row.time}
@@ -113,27 +106,27 @@ const Location = () => {
           </ul>
         </div>
 
-        {/* Contact information */}
-        <div className="flex-1 p-6 md:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-black/10">
+        {/* Contact info */}
+        <div className="flex-1 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-black/10">
           <div className="flex items-center gap-3 mb-4">
             <img
               src={Images.ContactIcon}
               alt=""
-              className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
+              className="w-8 h-8 lg:w-11 lg:h-11 object-contain"
             />
-            <h3 className="text-[18px] lg:text-[22px] font-bold text-[#03081F]">
+            <h3 className="text-lg lg:text-xl font-bold text-[#03081F]">
               Contact information
             </h3>
           </div>
-          <p className="text-[13px] lg:text-[15px] text-[#03081F] mb-4 leading-relaxed">
+          <p className="text-sm text-[#03081F] mb-4 leading-relaxed">
             {restaurant.allergyNote}
           </p>
-          <p className="text-[13px] lg:text-[15px] text-[#03081F]">
+          <p className="text-sm text-[#03081F]">
             <span className="font-bold">Phone number</span>
             <br />
             {restaurant.phone}
           </p>
-          <p className="text-[13px] lg:text-[15px] text-[#03081F] mt-3">
+          <p className="text-sm text-[#03081F] mt-3">
             <span className="font-bold">Website</span>
             <br />
             <a href={restaurant.website} className="hover:underline">
@@ -142,19 +135,17 @@ const Location = () => {
           </p>
         </div>
 
-        {/* Operational Times — dark panel */}
-        <div className="lg:w-[416px] bg-[#03081F] text-white p-6 md:p-8 lg:p-10 m-4 rounded-[12px] lg:m-0 lg:rounded-none lg:rounded-r-[12px]">
+        {/* Operational Times */}
+        <div className="lg:w-[380px] bg-[#03081F] text-white p-6 md:p-8 rounded-[12px] lg:rounded-none lg:rounded-r-[12px]">
           <div className="flex items-center gap-3 mb-4">
             <img
               src={Images.ClockIcon}
               alt=""
-              className="w-[32px] h-[32px] lg:w-[45px] lg:h-[45px] object-contain"
+              className="w-8 h-8 lg:w-11 lg:h-11 object-contain"
             />
-            <h3 className="text-[18px] lg:text-[22px] font-bold">
-              Operational Times
-            </h3>
+            <h3 className="text-lg lg:text-xl font-bold">Operational Times</h3>
           </div>
-          <ul className="flex flex-col gap-2 text-[13px] lg:text-[15px]">
+          <ul className="flex flex-col gap-2 text-sm">
             {restaurant.hours.operational.map((row) => (
               <li key={row.day}>
                 <span className="font-bold">{row.day}:</span> {row.time}
@@ -164,10 +155,9 @@ const Location = () => {
         </div>
       </div>
 
-      {/* ── Map section ── */}
-      <div className="relative w-full mt-10 rounded-[12px] shadow-[5px_5px_14px_0px_rgba(0,0,0,0.25)] flex flex-col lg:block overflow-hidden bg-[#03081F] lg:bg-transparent">
-        {/* Map Container */}
-        <div className="relative z-0 h-[350px] md:h-[450px] lg:h-[560px] w-full">
+      {/* Map Section */}
+      <div className="relative w-full rounded-[12px] shadow-[5px_5px_14px_0px_rgba(0,0,0,0.25)] flex flex-col lg:block overflow-hidden bg-[#03081F] lg:bg-transparent">
+        <div className="relative z-0 h-[350px] md:h-[450px] lg:h-[500px] w-full">
           <MapContainer
             center={[
               restaurant.mapCard.location.lat - 0.004,
@@ -198,22 +188,22 @@ const Location = () => {
           </MapContainer>
         </div>
 
-        {/* Info card - Stacks below on mobile, floats on desktop */}
-        <div className="relative lg:absolute z-[1000] lg:top-20 lg:left-15 w-full lg:w-[360px] h-auto lg:h-[420px] bg-[rgba(3,8,31,0.97)] lg:rounded-[12px] p-6 lg:p-8 flex flex-col justify-center text-white lg:shadow-2xl">
-          <h3 className="text-[20px] lg:text-[24px] font-bold">
+        {/* Floating Info Card */}
+        <div className="relative lg:absolute z-[1000] lg:top-12 lg:left-12 w-full lg:w-[340px] bg-[rgba(3,8,31,0.97)] lg:rounded-[12px] p-6 flex flex-col justify-center text-white lg:shadow-2xl">
+          <h3 className="text-lg lg:text-2xl font-bold">
             {restaurant.mapCard.name}
             <br />
             <span className="text-[#fc8a06]">{restaurant.mapCard.branch}</span>
           </h3>
-          <p className="text-[13px] lg:text-[15px] mt-3 leading-relaxed">
+          <p className="text-sm mt-3 leading-relaxed">
             {restaurant.mapCard.address}
           </p>
-          <p className="text-[13px] lg:text-[15px] mt-3">
+          <p className="text-sm mt-3">
             <span className="font-bold">Phone number</span>
             <br />
             <span className="text-[#fc8a06]">{restaurant.mapCard.phone}</span>
           </p>
-          <p className="text-[13px] lg:text-[15px] mt-3">
+          <p className="text-sm mt-3">
             <span className="font-bold">Website</span>
             <br />
             <span className="text-[#fc8a06]">{restaurant.mapCard.website}</span>

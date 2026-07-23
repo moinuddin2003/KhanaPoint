@@ -62,7 +62,7 @@ const SignupForm = () => {
       if (data?.message) {
         toast.success(data.message);
         login(data.data, data.token, true); // logs them straight in after signup
-        navigate(data.data?.is_admin ? "/admin" : "/home");
+        navigate(data.data?.is_admin ? "/admin" : "/");
       }
 
       console.log(formData);
